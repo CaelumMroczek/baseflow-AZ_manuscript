@@ -1,33 +1,56 @@
 ---
-title: La Palma Earthquakes
+title: Regional-scale Base-flow Index of Gauged and Ungauged Basins in Drylands
 author:
-  - name: Steve Purves
-    orcid: 0000-0002-0760-5497
+  - name: Caelum Mroczek
+    orcid: 0009-0005-6695-0134
     corresponding: true
-    email: steve@curvenote.com
+    email: csm428@nau.edu
     roles:
+      - Conceptualization
       - Investigation
-      - Project administration
-      - Software
+      - Methodology
+      - Formal analysis
       - Visualization
+      - Software
+      - Data curation
+      - Writing - Original Draft
     affiliations:
-      - Curvenote
-  - name: Rowan Cockett
-    orcid: 0000-0002-7859-8394
+      - School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA
+      
+  - name: Abraham Springer
+    orcid: 0000-0003-4826-9124
     corresponding: false
-    roles: []
+    roles:
+      - Conceptualization
+      - Supervision
+      - Project administration
+      - Funding acquisition
     affiliations:
-      - Curvenote
+      - School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA
+      
+  - name: Benjamin Lucas
+    orcid: 0000-0002-2021-3076
+    corresponding: false
+    roles:
+      - Software
+      - Supervision
+    affiliations:
+      - Department of Mathematics and Statistics, Northern Arizona University, Flagstaff, AZ, USA
+      
 keywords:
-  - La Palma
-  - Earthquakes
+  - Base Flow
+  - Base-flow Index
+  - Regionalization
+  
 abstract: |
-  In September 2021, a significant jump in seismic activity on the island of La Palma (Canary Islands, Spain) signaled the start of a volcanic crisis that still continues at the time of writing. Earthquake data is continually collected and published by the Instituto Geográphico Nacional (IGN). ...
+  In September 2021, ...
 plain-language-summary: |
   Earthquake data for the island of La Palma from the September 2021 eruption is found ...
+  
 key-points:
-  - A web scraping script was developed to pull data from the Instituto Geogràphico Nacional into a machine-readable form for analysis
-  - Earthquake events on La Palma are consistent with the presence of both mantle and crustal reservoirs.
+  - Base flow sustains dryland river ecology, but assessing its groundwater contribution faces data limitations
+  - Recursive filtering and machine learning predict BFI and streamflow-associated recharge
+  
 date: last-modified
 bibliography: references.bib
 citation:
@@ -35,77 +58,17 @@ citation:
 number-sections: true
 ---
 
-## Introduction
+## Introduction {#sec-intro}
 
-```{r}
-eruptions <- c(1492, 1585, 1646, 1677, 1712, 1949, 1971, 2021)
-n_eruptions <- length(eruptions)
-```
+Dryland regions, encompassing arid, semi-arid, hyper-arid, and dry sub-humid systems, account for 40% of the Earth’s land surface. They are home to approximately 2 billion people worldwide and represent the largest terrestrial biome (**iucn-drylands-2019)**. Despite supporting diverse ecosystems and human populations, dryland regions face mounting challenges exacerbated by increasing urbanization, expanding agricultural activities, and climate-induced amplification of precipitation patterns [@taylor2013]. This water scarcity is intensifying due to the compounding effects of climate variability and increased groundwater extraction [@taylor2013]. In drylands, groundwater serves as a vital resource for sustaining ecosystems and meeting human needs [@scanlon2006; @yao2018].
 
-```{r}
-#| label: fig-timeline
-#| fig-cap: Timeline of recent earthquakes on La Palma
-#| fig-alt: An event plot of the years of the last 8 eruptions on La Palma.
-#| fig-height: 1.5
-#| fig-width: 6
-par(mar = c(3, 1, 1, 1) + 0.1)
-plot(eruptions, rep(0, n_eruptions), 
-  pch = "|", axes = FALSE)
-axis(1)
-box()
-```
-
-```{r}
-#| output: false
-avg_years_between_eruptions <- mean(diff(eruptions[-n_eruptions]))
-avg_years_between_eruptions
-```
-
-Based on data up to and including 1971, eruptions on La Palma happen every `{r} round(avg_years_between_eruptions, 1)` years on average.
-
-Studies of the magma systems feeding the volcano, such as @marrero2019, have proposed that there are two main magma reservoirs feeding the Cumbre Vieja volcano; one in the mantle (30-40km depth) which charges and in turn feeds a shallower crustal reservoir (10-20km depth).
-
-Eight eruptions have been recorded since the late 1400s (@fig-timeline).
-
-Data and methods are discussed in @sec-data-methods.
-
-Let $x$ denote the number of eruptions in a year. Then, $x$ can be modeled by a Poisson distribution
-
-$$
-p(x) = \frac{e^{-\lambda} \lambda^{x}}{x !}
-$$ {#eq-poisson}
-
-where $\lambda$ is the rate of eruptions per year. Using @eq-poisson, the probability of an eruption in the next $t$ years can be calculated.
-
-| Name                 | Year   |
-| -------------------- | ------ |
-| Current              | 2021   |
-| Teneguía             | 1971   |
-| Nambroque            | 1949   |
-| El Charco            | 1712   |
-| Volcán San Antonio   | 1677   |
-| Volcán San Martin    | 1646   |
-| Tajuya near El Paso  | 1585   |
-| Montaña Quemada      | 1492   |
-
-: Recent historic eruptions on La Palma {#tbl-history}
-
-@tbl-history summarises the eruptions recorded since the colonization of the islands by Europeans in the late 1400s.
-
-![Map of La Palma](images/la-palma-map.png){#fig-map}
-
-La Palma is one of the west most islands in the Volcanic Archipelago of the Canary Islands (@fig-map). 
-
-{{< embed notebooks/explore-earthquakes.qmd#fig-spatial-plot >}}
-
-@fig-spatial-plot shows the location of recent Earthquakes on La Palma.
+Base flow is the sustained portion of streamflow in the absence of runoff that is derived from groundwater discharge **(usgs-glossary-2018).** Base flow is critical to maintaining seasonal low-flow regimes, supporting aquatic ecosystems, and facilitating the transport of nutrients and chemicals. Base-flow contribution to streamflow can be highly variable spatially [@singh2018; @bosch2017; @beck2013], and temporally [@ficklin2016; @tan2020]. Increasing groundwater extraction, changes in land cover/land use, and changes in precipitation patterns due to climate change affect the timing and volumes of base flow [@tan2020; @taylor2013]. Effective management of water quantity and quality depends on understanding seasonal and interannual base flow patterns and long-term changes in base flow behavior.
 
 ## Data & Methods {#sec-data-methods}
 
-## Conclusion
+## Conclusion {#sec-conclusion}
 
 ## References {.unnumbered}
 
-:::{#refs}
-
+::: {#refs}
 :::
