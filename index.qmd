@@ -108,7 +108,7 @@ where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total strea
 
 The implementation of machine learning models to predict hydrologic indices has been successful in past studies [@singh2018; @schmidt_ML_2020; @Rozos2021Machine]. In this work, we used the eXtreme Gradient Boosting (XGBoost) algorithm **(chen2016xgboost)** to predict BFI at ungauged locations using catchment characteristics as predictors. The XGBoost algorithm is a decision tree-based ensemble algorithm, which can be adapted for either regression or classification problems. It has grown in popularity in recent years due to its rapid, efficient, and scalable nature, and has proven effective in similar environmental modeling tasks such as streamflow forecasting [@szczepanek2022daily**; @ni2020streamflow**] and classifying land use/land cover data [@Georganos2018Very].
 
-XGBoost uses gradient boosting on decision tree algorithms to leverage the combination of multiple very low variance models into one overall prediction. Gradient boosting works sequentially, with the first tree being learned on the known target values, and each subsequent tree being learned on the errors of the tree prior. The algorithm then applies a weighting to each tree based on this boosting to determine how much the tree will contribute towards the final output. The final prediction is obtained by the input data traversing all $n$ weighted trees in the learned ensemble. The trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (Table \ref{tab-######}##}##}##}. Certain predictors were subdivided according to their areal coverage of each basin (e.g. land cover was divided into 16 subdivisions).
+XGBoost uses gradient boosting on decision tree algorithms to leverage the combination of multiple very low variance models into one overall prediction. Gradient boosting works sequentially, with the first tree being learned on the known target values, and each subsequent tree being learned on the errors of the tree prior. The algorithm then applies a weighting to each tree based on this boosting to determine how much the tree will contribute towards the final output. The final prediction is obtained by the input data traversing all $n$ weighted trees in the learned ensemble. The trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (Table \ref{tab-######}##}##}##}##}##}. Certain predictors were subdivided according to their areal coverage of each basin (e.g. land cover was divided into 16 subdivisions).
 
 |              | Variable                   | Source | Geoprocessing          |
 |--------------|----------------------------|--------|------------------------|
@@ -129,6 +129,19 @@ XGBoost uses gradient boosting on decision tree algorithms to leverage the combi
 ## Results
 
 ### BFI of Gauged Catchments
+
+|                              | n    | R2    | MSE    | RMSE  | MAE   | Nash-Sutcliffe | pbias |
+|---------|---------|---------|---------|---------|---------|---------|---------|
+| Climate - Monsoon Dominated  | 3345 | 0.707 | 0.0166 | 0.129 | 0.077 | 0.694          | -12.6 |
+| Climate - Snowmelt Dominated | 6152 | 0.723 | 0.017  | 0.131 | 0.094 | 0.715          | -3.7  |
+| PhysRegion - Basin&Range     | 7754 | 0.749 | 0.018  | 0.133 | 0.089 | 0.741          | -5.9  |
+| PhysRegion - CO Plateau      | 1743 | 0.806 | 0.013  | 0.115 | 0.081 | 0.801          | -4.4  |
+| Climate - Warm-Wet           | 1613 | 0.690 | 0.015  | 0.124 | 0.081 | 0.679          | -9.9  |
+| Climate - Warm-Dry           | 3134 | 0.758 | 0.023  | 0.151 | 0.097 | 0.745          | -8.1  |
+| Climate - Cool-Wet           | 3134 | 0.710 | 0.013  | 0.115 | 0.085 | 0.708          | -2.5  |
+| Climate - Cool-Dry           | 1616 | 0.809 | 0.014  | 0.118 | 0.082 | 0.803          | -5    |
+| Slope - High                 | 4398 | 0.753 | 0.014  | 0.120 | 0.084 | 0.746          | -4.4  |
+| Slope - Low                  | 5099 | 0.759 | 0.019  | 0.138 | 0.090 | 0.750          | -6.9  |
 
 ### BFI of Ungauged Catchments
 
