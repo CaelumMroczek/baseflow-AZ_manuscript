@@ -130,7 +130,7 @@ XGBoost uses gradient boosting on decision tree algorithms to leverage the combi
 
 ### Statistical Analyses
 
-Statisical analyses were performed on mean annual BFI values of instrumented streamgages. We examined the presence of temporal trends in mean annual BFI using the Mann-Kendall nonparametric trend test [@kendall1970; @mann1945nonparametric]. The Mann-Kendall was used to determine trends in BFI and trend significance of gauged reaches during their period of record.
+Statisical analyses were performed on mean annual BFI values of instrumented streamgages. We examined the presence of temporal trends in mean annual BFI using the Mann-Kendall nonparametric trend test [@kendall1970; @mann1945nonparametric]. The Mann-Kendall test was used to determine trends in BFI and trend significance of gauged reaches.
 
 Trends with a $\rho \le 0.05$ are considered significant.
 
