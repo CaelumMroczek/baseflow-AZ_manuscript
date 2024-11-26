@@ -148,6 +148,21 @@ The stream reaches of the Little Colorado River Basin (northeastern Arizona) ind
 
 ![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. Nonsignificant trends are shown by colors of circles.](images/BFITrends.png){#fig-instrumented-trend}
 
+| Classification Group         |   n | n_pos | n_neg | perc_pos | perc_neg |
+|:-----------------------------|----:|------:|------:|---------:|---------:|
+| Climate - Monsoon Dominated  |  94 |    10 |    23 |    0.106 |    0.245 |
+| Climate - Snowmelt Dominated | 150 |    19 |    17 |    0.127 |    0.113 |
+| PhysRegion - Basin&Range     | 190 |    26 |    33 |    0.137 |    0.174 |
+| PhysRegion - CO Plateau      |  54 |     3 |     7 |    0.056 |    0.130 |
+| Climate - Warm-Wet           |  31 |     3 |     6 |    0.097 |    0.194 |
+| Climate - Warm-Dry           |  81 |    15 |    16 |    0.185 |    0.198 |
+| Climate - Cool-Wet           |  83 |     6 |    11 |    0.072 |    0.133 |
+| Climate - Cool-Dry           |  49 |     5 |     7 |    0.102 |    0.143 |
+| Slope - High                 | 111 |    12 |    15 |    0.108 |    0.135 |
+| Slope - Low                  | 133 |    17 |    25 |    0.128 |    0.188 |
+
+: Table 2. Comparison of trends for BFI for all sites split by various classifications. Only sites with a significant ($\rho \le 0.05$) trend are included here as established by a Mann-Kendall test for monotonic trends across the full period of record. n is the number of sites, n_pos (n_neg) is the number of sites with positive (negative) trends, perc_pos (perc_neg) is the percentage of n with a positive (negative) trend. {#tbl-trends}
+
 ### BFI of Ungauged Catchments
 
 #### Model Validation
@@ -165,7 +180,7 @@ The stream reaches of the Little Colorado River Basin (northeastern Arizona) ind
 | Slope - High                 | 4398 | 0.753 | 0.014  | 0.120 | 0.084 | 0.746 | -4.4  |
 | Slope - Low                  | 5099 | 0.759 | 0.019  | 0.138 | 0.090 | 0.750 | -6.9  |
 
-: Table 2. Performance of model predictions for BFI for all sites split by various classifications. n is number of sites, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
+: Table 3. Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
 
 #### Predictor Importance {#sec-predictor-importance}
 
