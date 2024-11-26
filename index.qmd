@@ -78,7 +78,7 @@ This study develops a technique for estimating BFI in ungauged basins in Arizona
 
 The state of Arizona, located in the southwest United States, covers a total area of 295,253 km$^2$. Arizona is divided into two primary physiographic provinces: the Colorado Plateau in the northeast, and the Basin-and-Range region in the northwest and south. The Central Highlands is a transition zone consisting of scattered basins separated by the mountainous foothills of the Mogollon Rim. The Colorado Plateau is dominated by high-elevation desert with an average elevation of 1,936 masl (6,352 ft). Average temperatures range from -6$^\circ$C (20$^\circ$F) to 26$^\circ$C (80$^\circ$F) and it averages 580 mm (23 in) of precipitation. The Basin-and-Range region has a semi-arid to arid climate with an average elevation of 490 masl (1600 ft). The average precipitation is 200 mm (8 in) annually with average temperatures ranging from 15$^\circ$C (60$^\circ$F) to 43$^\circ$C (110$^\circ$F).
 
-![Map of Arizona indicating US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown.](images/StudyArea.png){#fig-study-area}
+![Map of Arizona indicating US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown.](images/StudyArea_20241126.png){#fig-study-area}
 
 Arizona's hydrology varies seasonally and spatially between its physiographic regions. In the summer, localized and intense convective precipitation events are driven by the North American Monsoon, while in the winter, orographic precipitation comes from Pacific frontal systems [@eastoe2019mtnblock]. While monsoonal precipitation can account for up to 50% of annual precipitation, evaporation and dry preceding soil properties leads to most precipitation becoming runoff [@sheppard2002]. As such, 94% of streams in Arizona are ephemeral or intermittent [@epa_AZephemeral]. Much of the hydrology of Arizona is snow-melt derived, driven by spring melt from the high-elevation Colorado Plateau winter snowpack. While winter precipitation provides only 30% of annual averages, it provides the bulk of water for natural reservoirs [@sheppard2002].
 
@@ -138,7 +138,7 @@ Trends with a $\rho \le 0.05$ are considered significant.
 
 ### BFI of Gauged Catchments
 
-![Mean annual BFI for the period of study (1991-2020) from instrumented stream flow data.](images/BFI_Instrumented.png){#fig-instrumented-bfi}
+![Mean annual BFI for the period of study (1991-2020) from instrumented stream flow data.](images/BFI_Instrumented_20241126.png){#fig-instrumented-bfi}
 
 The long-term average BFI for the 244 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi . The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. Relatively high BFI values (\>0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by @wolock2003.
 
@@ -146,9 +146,7 @@ The stream reaches of the Little Colorado River Basin (northeastern Arizona) ind
 
 #### Trends in BFI {#sec-bfi-trends}
 
-![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. Nonsignificant trends are shown by colors of circles.](images/BFITrends.png){#fig-instrumented-trend}
-
-![](images/BFITrends_significant.png)
+![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.](images/BFITrends_20241126.png){#fig-instrumented-trend}
 
 | Classification Group         |   n | n_pos | n_neg | perc_pos | perc_neg |
 |:-----------------------------|----:|------:|------:|---------:|---------:|
@@ -190,7 +188,7 @@ Consistently negative pbias values across all classifications suggest an under-p
 
 #### Predicted Long-term Mean BFI
 
-![Predicted mean annual BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8.png){#fig-bfi-huc}
+![Predicted mean annual BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20241126.png){#fig-bfi-huc}
 
 ![Predicted mean annual BFI values for all reaches of Strahler stream order 3 and greater](images/BFI_AllStream.pdf){#fig-bfi-streams}
 

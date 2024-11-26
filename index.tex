@@ -308,7 +308,7 @@ temperatures ranging from 15\(^\circ\)C (60\(^\circ\)F) to 43\(^\circ\)C
 
 \centering{
 
-\includegraphics{images/StudyArea.png}
+\includegraphics{images/StudyArea_20241126.png}
 
 }
 
@@ -463,8 +463,8 @@ cover was divided into 16 subdivisions).
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3784}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.1081}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.3243}}@{}}
-\caption{\textbf{Table 1.} Basin-characteristic variables used as
-predictors in XGBoost model.}\label{tbl-predictors}\tabularnewline
+\caption{Basin-characteristic variables used as predictors in XGBoost
+model.}\label{tbl-predictors}\tabularnewline
 \toprule\noalign{}
 \begin{minipage}[b]{\linewidth}\raggedright
 \end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
@@ -507,9 +507,8 @@ Geospatial & Elevation & DEM & Basin average \\
 Statisical analyses were performed on mean annual BFI values of
 instrumented streamgages. We examined the presence of temporal trends in
 mean annual BFI using the Mann-Kendall nonparametric trend test
-(Kendall, 1970; Mann, 1945). The Mann-Kendall was used to determine
-trends in BFI and trend significance of gauged reaches during their
-period of record.
+(Kendall, 1970; Mann, 1945). The Mann-Kendall test was used to determine
+trends in BFI and trend significance of gauged reaches.
 
 Trends with a \(\rho \le 0.05\) are considered significant.
 
@@ -521,7 +520,7 @@ Trends with a \(\rho \le 0.05\) are considered significant.
 
 \centering{
 
-\includegraphics{images/BFI_Instrumented.png}
+\includegraphics{images/BFI_Instrumented_20241126.png}
 
 }
 
@@ -530,15 +529,16 @@ study (1991-2020) from instrumented stream flow data.}
 
 \end{figure}%
 
-The long-term average BFI for the 245 gauged reaches across Arizona is
-illustrated in \textbf{?@fig-instrumented-bfi.The} highest BFI values
-(\textgreater0.9) are found along the Grand Canyon in northwestern
-Arizona. The highly karstic geology of this region facilitates the rapid
-movement of subsurface flow to surface water and spring outlets
-(Chambless et al., 2023). Relatively high BFI values (\textgreater0.8)
-are found at the spring-fed headwaters of the Verde River (Del Rio
-Spring) and the spring-fed headwaters of Fossil Creek. These results are
-consistent with interpolated BFI values reported by Wolock (2003).
+The long-term average BFI for the 244 gauged reaches across Arizona is
+illustrated in Figure~\ref{fig-instrumented-bfi} . The highest BFI
+values (\textgreater0.9) are found along the Grand Canyon in
+northwestern Arizona. The highly karstic geology of this region
+facilitates the rapid movement of subsurface flow to surface water and
+spring outlets (Chambless et al., 2023). Relatively high BFI values
+(\textgreater0.8) are found at the spring-fed headwaters of the Verde
+River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek.
+These results are consistent with interpolated BFI values reported by
+Wolock (2003).
 
 The stream reaches of the Little Colorado River Basin (northeastern
 Arizona) indicate consisently low BFI values (\textless{} 0.2). This is
@@ -560,17 +560,77 @@ River, and Little Colorado Rivers in Arizona.
 
 \centering{
 
-\includegraphics{images/BFITrends.png}
+\includegraphics{images/BFITrends_20241126.png}
 
 }
 
 \caption{\label{fig-instrumented-trend}Trends in BFI over full period of
 record for instrumented sites used in this study. Red upward (blue
 downward) arrows indicate an increasing (decreasing) trend at a
-significance level of 5\%. Nonsignificant trends are shown by colors of
-circles.}
+significance level of 5\%. White circles represent sites with no
+statistically significant trends.}
 
 \end{figure}%
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.4348}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0725}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1014}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1014}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1449}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1449}}@{}}
+\caption{Comparison of trends for BFI for all sites split by various
+classifications. Only sites with a significant (\(\rho \le 0.05\)) trend
+are included here as established by a Mann-Kendall test for monotonic
+trends across the full period of record. n is the number of sites,
+n\_pos (n\_neg) is the number of sites with positive (negative) trends,
+perc\_pos (perc\_neg) is the percentage of n with a positive (negative)
+trend.}\label{tbl-trends}\tabularnewline
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Classification Group
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_pos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_neg
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+perc\_pos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+perc\_neg
+\end{minipage} \\
+\midrule\noalign{}
+\endfirsthead
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Classification Group
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_pos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_neg
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+perc\_pos
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+perc\_neg
+\end{minipage} \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Climate - Monsoon Dominated & 94 & 10 & 23 & 0.106 & 0.245 \\
+Climate - Snowmelt Dominated & 150 & 19 & 17 & 0.127 & 0.113 \\
+PhysRegion - Basin\&Range & 190 & 26 & 33 & 0.137 & 0.174 \\
+PhysRegion - CO Plateau & 54 & 3 & 7 & 0.056 & 0.130 \\
+Climate - Warm-Wet & 31 & 3 & 6 & 0.097 & 0.194 \\
+Climate - Warm-Dry & 81 & 15 & 16 & 0.185 & 0.198 \\
+Climate - Cool-Wet & 83 & 6 & 11 & 0.072 & 0.133 \\
+Climate - Cool-Dry & 49 & 5 & 7 & 0.102 & 0.143 \\
+Slope - High & 111 & 12 & 15 & 0.108 & 0.135 \\
+Slope - Low & 133 & 17 & 25 & 0.128 & 0.188 \\
+\end{longtable}
 
 \subsection{BFI of Ungauged
 Catchments}\label{bfi-of-ungauged-catchments}
@@ -586,8 +646,8 @@ Catchments}\label{bfi-of-ungauged-catchments}
   >{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0886}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0886}}
   >{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0886}}@{}}
-\caption{Table 2. Performance of model predictions for BFI for all sites
-split by various classifications. n is number of sites,
+\caption{Performance of model predictions for BFI for all sites split by
+various classifications. n is number of observatios,
 R\textsuperscript{2} is the coefficient of determination of a linear
 regression, MSE is mean-squared-error, RMSE is root-mean-squared-error,
 MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias
@@ -652,6 +712,9 @@ Slope - High & 4398 & 0.753 & 0.014 & 0.120 & 0.084 & 0.746 & -4.4 \\
 Slope - Low & 5099 & 0.759 & 0.019 & 0.138 & 0.090 & 0.750 & -6.9 \\
 \end{longtable}
 
+Consistently negative pbias values across all classifications suggest an
+under-prediction of BFI.
+
 \subsubsection{Predictor Importance}\label{sec-predictor-importance}
 
 \subsubsection{Predicted Long-term Mean
@@ -661,7 +724,7 @@ BFI}\label{predicted-long-term-mean-bfi}
 
 \centering{
 
-\includegraphics{images/BFI_HUC8.png}
+\includegraphics{images/BFI_HUC8_20241126.png}
 
 }
 
