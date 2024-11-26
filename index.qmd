@@ -126,7 +126,7 @@ XGBoost uses gradient boosting on decision tree algorithms to leverage the combi
 |              | Geology                    | USGS   | Percent areal coverage |
 |              | Karst                      | USGS   | Percent areal coverage |
 
-: **Table 1.** Basin-characteristic variables used as predictors in XGBoost model. {#tbl-predictors}
+: Basin-characteristic variables used as predictors in XGBoost model. {#tbl-predictors}
 
 ### Statistical Analyses
 
@@ -140,13 +140,15 @@ Trends with a $\rho \le 0.05$ are considered significant.
 
 ![Mean annual BFI for the period of study (1991-2020) from instrumented stream flow data.](images/BFI_Instrumented.png){#fig-instrumented-bfi}
 
-The long-term average BFI for the 245 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi.The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. Relatively high BFI values (\>0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by @wolock2003.
+The long-term average BFI for the 244 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi . The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. Relatively high BFI values (\>0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by @wolock2003.
 
 The stream reaches of the Little Colorado River Basin (northeastern Arizona) indicate consisently low BFI values (\< 0.2). This is likely due to low-yielding perched aquifers underlying the Defiance Uplift in northeastern Arizona, which are hydrologically connected to surface streams, while the high-yield, confined regional aquifer is much deeper [@blanchard02]. This region also typifies a pattern of seen along most major rivers in the study area: upstream reaches indicate higher BFI values while the downstream reaches display lower BFI values. This is assumed to be due to greater groundwater-surface water interaction at the headwaters of streams (likely due to spring outlets) and the dilution of base flow while moving down stream (**CITATION**). This pattern is seen along the Gila River, Verde River, and Little Colorado Rivers in Arizona.
 
 #### Trends in BFI {#sec-bfi-trends}
 
 ![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. Nonsignificant trends are shown by colors of circles.](images/BFITrends.png){#fig-instrumented-trend}
+
+![](images/BFITrends_significant.png)
 
 | Classification Group         |   n | n_pos | n_neg | perc_pos | perc_neg |
 |:-----------------------------|----:|------:|------:|---------:|---------:|
@@ -161,7 +163,7 @@ The stream reaches of the Little Colorado River Basin (northeastern Arizona) ind
 | Slope - High                 | 111 |    12 |    15 |    0.108 |    0.135 |
 | Slope - Low                  | 133 |    17 |    25 |    0.128 |    0.188 |
 
-: Table 2. Comparison of trends for BFI for all sites split by various classifications. Only sites with a significant ($\rho \le 0.05$) trend are included here as established by a Mann-Kendall test for monotonic trends across the full period of record. n is the number of sites, n_pos (n_neg) is the number of sites with positive (negative) trends, perc_pos (perc_neg) is the percentage of n with a positive (negative) trend. {#tbl-trends}
+: Comparison of trends for BFI for all sites split by various classifications. Only sites with a significant ($\rho \le 0.05$) trend are included here as established by a Mann-Kendall test for monotonic trends across the full period of record. n is the number of sites, n_pos (n_neg) is the number of sites with positive (negative) trends, perc_pos (perc_neg) is the percentage of n with a positive (negative) trend. {#tbl-trends}
 
 ### BFI of Ungauged Catchments
 
@@ -180,7 +182,9 @@ The stream reaches of the Little Colorado River Basin (northeastern Arizona) ind
 | Slope - High                 | 4398 | 0.753 | 0.014  | 0.120 | 0.084 | 0.746 | -4.4  |
 | Slope - Low                  | 5099 | 0.759 | 0.019  | 0.138 | 0.090 | 0.750 | -6.9  |
 
-: Table 3. Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
+: Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
+
+Consistently negative pbias values across all classifications suggest an under-prediction of BFI.
 
 #### Predictor Importance {#sec-predictor-importance}
 
