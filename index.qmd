@@ -98,13 +98,13 @@ A 30-meter resolution Digital Elevation Model (DEM) of Arizona was used to deriv
 
 Directly measuring base flow and BFI presents unique challenges [@eckhardt2008]. The technique chosen to separate base flow has been shown to affect results, and the choice of base-flow separation method is subjective since ‘true’ BFI values are not known [@beck2013]. However, many methods have been developed to estimate these values. These methods include the use of tracers [@gonzales2009], graphical interpolation [@instituteofhydrology1980; @sloto1996], and digital filters [@arnold1995; @eckhardt2005; @lyne1979; @nathan1990]. These techniques have varying levels of applicability depending on the spatial scale, time span, and the scope of the study. Comparisons of various base-flow separation techniques have been made in [@eckhardt2005; @eckhardt2008; @nathan1990] , but this study does not explore the superiority of different methods.
 
-Base flow was calculated using a single-parameter, recursive digital filter technique from [@nathan1990]. This base-flow separation technique is based on a recursive digital filter used in signal analysis that separates high-frequency signals (quickflow) from low-frequency signals (base flow) [@lyne1979]. This technique has been used in [@ARNOLD200021; @santhi2008; @bloomfield2009; @singh2018]. It takes the form of
+Base flow was calculated using a single-parameter, recursive digital filter technique from [@nathan1990]. This base-flow separation technique is based on a recursive digital filter used in signal analysis that separates high-frequency signals (quickflow) from low-frequency signals (base flow) [@lyne1979]. @eckhardt2023 noted that recursive digital filters lack a physical basis, but as the method is easy to automate, objective, and repeatable, it is appropriate for a regional-scale study. This technique has been used in [@ARNOLD200021; @santhi2008; @bloomfield2009; @singh2018]. It takes the form of
 
 $$
 b = \alpha b_{k-1} + \frac{1-\alpha}{2}(Q_k + Q_{k-1})
 $$ {#eq-bf-separate}
 
-where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total streamflow, and $k$ is the time step. A filter parameter $\alpha$ of 0.925 was used as in @nathan1990 and @fuka2014ecohydrology. The filter was run three times (forward, backward, forward) to attenuate the base-flow signal. @eckhardt2023 noted that recursive digital filters lack a physical basis, but as the method is easy to automate, objective, and repeatable, it is appropriate for a regional-scale study.
+where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total streamflow, and $k$ is the time step. A filter parameter $\alpha$ of 0.925 was used as in @nathan1990 and @fuka2014ecohydrology. The filter was run three times (forward, backward, forward) to attenuate the base-flow signal. 
 
 ### Machine Learning
 
