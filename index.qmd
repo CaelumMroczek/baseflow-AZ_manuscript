@@ -104,7 +104,7 @@ $$
 b = \alpha b_{k-1} + \frac{1-\alpha}{2}(Q_k + Q_{k-1})
 $$ {#eq-bf-separate}
 
-where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total streamflow, and $k$ is the time step. A filter parameter $\alpha$ of 0.925 was used as in @nathan1990 and @fuka2014ecohydrology. The filter was run three times (forward, backward, forward) to attenuate the base-flow signal. 
+where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total streamflow, and $k$ is the time step. A filter parameter $\alpha$ of 0.925 was used as in @nathan1990 and @fuka2014ecohydrology. The filter was run three times (forward, backward, forward) to attenuate the base-flow signal.
 
 ### Machine Learning
 
@@ -140,7 +140,7 @@ Trends with a $\rho \le 0.05$ are considered significant.
 
 ### BFI of Gauged Catchments
 
-![Mean annual BFI for the period of study (1991-2020) from instrumented stream flow data.](images/BFI_Instrumented_20241126.png){#fig-instrumented-bfi}
+![Mean annual BFI for the period of record from instrumented stream flow data.](images/BFI_Instrumented_20241126.png){#fig-instrumented-bfi}
 
 The long-term average BFI for the 244 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi . The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. Relatively high BFI values (\>0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by @wolock2003.
 
@@ -152,18 +152,18 @@ Trends in BFI over the period of record for each streamgage in this analysis are
 
 ![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.](images/BFITrends_20241126.png){#fig-instrumented-trend}
 
-| Classification Group         |   n | n_pos | n_neg | perc_pos | perc_neg |
-|:-----------------------------|----:|------:|------:|---------:|---------:|
-| Climate - Monsoon Dominated  |  94 |     9 |    23 |    0.096 |    0.245 |
-| Climate - Snowmelt Dominated | 150 |    19 |    17 |    0.127 |    0.113 |
-| PhysRegion - Basin&Range     | 190 |    25 |    33 |    0.132 |    0.174 |
-| PhysRegion - CO Plateau      |  54 |     3 |     7 |    0.056 |    0.130 |
-| Climate - Warm-Wet           |  31 |     2 |     6 |    0.065 |    0.194 |
-| Climate - Warm-Dry           |  81 |    15 |    16 |    0.185 |    0.198 |
-| Climate - Cool-Wet           |  83 |     6 |    11 |    0.072 |    0.133 |
-| Climate - Cool-Dry           |  49 |     5 |     7 |    0.102 |    0.143 |
-| Slope - High                 | 111 |    12 |    15 |    0.108 |    0.135 |
-| Slope - Low                  | 133 |    16 |    25 |    0.120 |    0.188 |
+| Group                              | n   | n_pos | n_neg | perc_pos | perc_neg |
+|------------------------------------|-----|-------|-------|----------|----------|
+| Precipitation - Monsoon Dominated  | 87  | 8     | 21    | 0.092    | 0.241    |
+| Precipitation - Snowmelt Dominated | 118 | 9     | 12    | 0.076    | 0.102    |
+| PhysRegion - Basin&Range           | 156 | 14    | 26    | 0.090    | 0.167    |
+| PhysRegion - CO Plateau            | 49  | 3     | 7     | 0.061    | 0.143    |
+| Climate - Warm-Wet                 | 31  | 2     | 6     | 0.065    | 0.194    |
+| Climate - Warm-Dry                 | 55  | 6     | 11    | 0.109    | 0.200    |
+| Climate - Cool-Wet                 | 74  | 4     | 9     | 0.054    | 0.122    |
+| Climate - Cool-Dry                 | 45  | 5     | 7     | 0.111    | 0.156    |
+| Slope - High                       | 102 | 10    | 12    | 0.098    | 0.118    |
+| Slope - Low                        | 103 | 7     | 21    | 0.068    | 0.204    |
 
 : Comparison of trends for BFI for all sites split by various classifications. Only sites with a significant ($\rho \le 0.05$) trend are included here as established by a Mann-Kendall test for monotonic trends across the full period of record. n is the number of sites, n_pos (n_neg) is the number of sites with positive (negative) trends, perc_pos (perc_neg) is the percentage of n with a positive (negative) trend. {#tbl-trends}
 
@@ -171,18 +171,18 @@ Trends in BFI over the period of record for each streamgage in this analysis are
 
 #### Model Validation
 
-|                              | n    | R^2^  | MSE    | RMSE  | MAE   | NSE   | pbias |
-|------------------------------|------|-------|--------|-------|-------|-------|-------|
-| Climate - Monsoon Dominated  | 3345 | 0.707 | 0.0166 | 0.129 | 0.077 | 0.694 | -12.6 |
-| Climate - Snowmelt Dominated | 6152 | 0.723 | 0.017  | 0.131 | 0.094 | 0.715 | -3.7  |
-| PhysRegion - Basin&Range     | 7754 | 0.749 | 0.018  | 0.133 | 0.089 | 0.741 | -5.9  |
-| PhysRegion - CO Plateau      | 1743 | 0.806 | 0.013  | 0.115 | 0.081 | 0.801 | -4.4  |
-| Climate - Warm-Wet           | 1613 | 0.690 | 0.015  | 0.124 | 0.081 | 0.679 | -9.9  |
-| Climate - Warm-Dry           | 3134 | 0.758 | 0.023  | 0.151 | 0.097 | 0.745 | -8.1  |
-| Climate - Cool-Wet           | 3134 | 0.710 | 0.013  | 0.115 | 0.085 | 0.708 | -2.5  |
-| Climate - Cool-Dry           | 1616 | 0.809 | 0.014  | 0.118 | 0.082 | 0.803 | -5    |
-| Slope - High                 | 4398 | 0.753 | 0.014  | 0.120 | 0.084 | 0.746 | -4.4  |
-| Slope - Low                  | 5099 | 0.759 | 0.019  | 0.138 | 0.090 | 0.750 | -6.9  |
+| Classification Group               | n    | R^2^  | MSE    | RMSE  | MAE   | NSE   | pbias |
+|----------------|--------|--------|--------|--------|--------|--------|--------|
+| Precipitation - Monsoon Dominated  | 3345 | 0.707 | 0.0166 | 0.129 | 0.077 | 0.694 | -12.6 |
+| Precipitation - Snowmelt Dominated | 6152 | 0.723 | 0.017  | 0.131 | 0.094 | 0.715 | -3.7  |
+| PhysRegion - Basin&Range           | 7754 | 0.749 | 0.018  | 0.133 | 0.089 | 0.741 | -5.9  |
+| PhysRegion - CO Plateau            | 1743 | 0.806 | 0.013  | 0.115 | 0.081 | 0.801 | -4.4  |
+| Climate - Warm-Wet                 | 1613 | 0.690 | 0.015  | 0.124 | 0.081 | 0.679 | -9.9  |
+| Climate - Warm-Dry                 | 3134 | 0.758 | 0.023  | 0.151 | 0.097 | 0.745 | -8.1  |
+| Climate - Cool-Wet                 | 3134 | 0.710 | 0.013  | 0.115 | 0.085 | 0.708 | -2.5  |
+| Climate - Cool-Dry                 | 1616 | 0.809 | 0.014  | 0.118 | 0.082 | 0.803 | -5    |
+| Slope - High                       | 4398 | 0.753 | 0.014  | 0.120 | 0.084 | 0.746 | -4.4  |
+| Slope - Low                        | 5099 | 0.759 | 0.019  | 0.138 | 0.090 | 0.750 | -6.9  |
 
 : Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
 
