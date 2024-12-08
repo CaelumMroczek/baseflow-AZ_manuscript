@@ -110,29 +110,37 @@ where $b$ is base flow, $\alpha$ is the filter parameter, $Q$ is the total strea
 
 The implementation of machine learning models to predict hydrologic indices has been successful in past studies [@singh2018; @schmidt_ML_2020; @Rozos2021Machine]. In this work, we used the eXtreme Gradient Boosting (XGBoost) algorithm [@chen2016xgboost] to predict BFI at ungauged locations using catchment characteristics as predictors. The XGBoost algorithm is a decision tree-based ensemble algorithm, which can be adapted for either regression or classification problems. It has grown in popularity in recent years due to its rapid, efficient, and scalable nature, and has proven effective in similar environmental modeling tasks such as streamflow forecasting [@szczepanek2022daily**; @ni2020streamflow**] and classifying land use/land cover data [@Georganos2018Very].
 
-XGBoost uses gradient boosting on decision tree algorithms to leverage the combination of multiple very low variance models into one overall prediction. Gradient boosting works sequentially, with the first tree being learned on the known target values, and each subsequent tree being learned on the errors of the tree prior. The algorithm then applies a weighting to each tree based on this boosting to determine how much the tree will contribute towards the final output. The final prediction is obtained by the input data traversing all $n$ weighted trees in the learned ensemble. The trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (@tbl-predictors). Certain predictors were subdivided according to their areal coverage of each basin (e.g. land cover was divided into 16 subdivisions).
+XGBoost uses gradient boosting on decision tree algorithms to leverage the combination of multiple very low variance models into one overall prediction. Gradient boosting works sequentially, with the first tree being learned on the known target values, and each subsequent tree being learned on the errors of the tree prior. The algorithm then applies a weighting to each tree based on this boosting to determine how much the tree will contribute towards the final output. The final prediction is obtained by the input data traversing all $n$ weighted trees in the learned ensemble. The trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (@tbl-predictors). Certain features were subdivided according to their areal coverage of each basin (e.g. land cover was divided into 16 subdivisions).
 
-|              | Variable                   | Source | Geoprocessing          |
-|--------------|----------------------------|--------|------------------------|
-| Hydroclimate | Precipitation              | PRISM  | Basin average          |
-|              | Mean Temperature           | PRISM  | Basin average          |
-|              | Average Evapotranspiration | MODIS  | Basin average          |
-| Geospatial   | Elevation                  | DEM    | Basin average          |
-|              | Area                       | DEM    | Basin average          |
-|              | Slope                      | DEM    | Basin average          |
-|              | Aspect                     | DEM    | Percent areal coverage |
-|              | Land Cover                 | NLCD   | Percent areal coverage |
-|              | Hydrologic Soil Group      | SSURGO | Percent areal coverage |
-|              | Geology                    | USGS   | Percent areal coverage |
-|              | Karst                      | USGS   | Percent areal coverage |
+|              | Variable                  | Source       | Geoprocessing          |
+|------------------|-------------------|------------------|------------------|
+| Hydroclimate | Precipitation\*           | PRISM        | Basin average          |
+|              | Mean Temperature\*        | PRISM        | Basin average          |
+|              | Mean Evapotranspiration\* | TerraClimate | Basin average          |
+| Geospatial   | Elevation\*               | DEM          | Basin average          |
+|              | Area                      | DEM          | Basin average          |
+|              | Slope                     | DEM          | Basin average          |
+|              | Aspect                    | DEM          | Percent areal coverage |
+|              | Land Cover\*              | NLCD         | Percent areal coverage |
+|              | Hydrologic Soil Group\*   | SSURGO       | Percent areal coverage |
+|              | Geology                   | USGS         | Percent areal coverage |
+|              | Karst                     | USGS         | Percent areal coverage |
 
-: Basin-characteristic variables used as predictors in XGBoost model. {#tbl-predictors}
+: Basin-characteristic variables used as initial features in XGBoost model. Starred features are maintained in the final, dimensionality-reduced model. {#tbl-predictors}
+
+Our training dataset consisted of 7724 observations of 45 variables. We first determined the optimal values for our hyperparameters using an exhaustive grid search and 5-fold cross-validation. The hyperparameters explored were: learning rate (referred to as $\eta$), minimum split loss ($\gamma$), maximum tree depth, minimum child weight, and number of trees. While these do not represent all possible hyperparameters of XGBoost, we are confident that the range of values explored represent sufficient variation to ensure that we have found a high-performing model. The optimal hyperparameters were found to be 700 trees, an $\eta$ of 0.05, a $\gamma$ of 0.075, maximum tree depth of 7, and a minimum child weight of 5. Using these values, the XGBoost model was then trained on the dataset using 10-fold cross-validation. $K$-fold cross-validation provides an unbiased estimate of a model's accuracy on unseen data, while also insuring against overfitting or underfitting. It does this by randomly splitting the data into $k$ folds of equal size, training the model on all-but-one fold, and testing on the one held-out fold (referred to as the validation set). This process is then repeated $k-1$ more times. We note that the training process starts fresh for each repeat of the process, meaning we are effectively training $k$ independent models, with each having the same hyperparameters but different training data. By averaging the performance of the model over $k$ folds we ensure robustness in our prediction accuracy. All of our models were optimized and assessed using root mean squared error as the performance metric.
+
+#### Feature Selection
+
+Machine learning models can face issues with overfitting when provided with a large set of predicting features. This can cause reductions in performance on unseen data and requires greater computational power and memory storage [@feat_selec2017]. Dimensionality reduction is a powerful tool in addressing these issues which can be divided into two broad categories: feature extraction and feature selection. Feature extraction involves projecting the higher dimensional dataset to a feature space with less dimensions, though this entails creating a new set of features that lose the physical meaning of the original feature space. On the other hand, feature selection maintains a subset of the original features, all of which retain their physical meaning providing better readability and interpretability. Here, a supervised features selection was used to reduce the number of predictors and, as a result, increased learning performance, decreased computational costs, and reduced overfitting.
+
+An initial model was trained on the full feature set of 45 predictors (@tbl-predictors). We then used a feature importance method of feature selection to remove noise and less-important features. Feature importance scores are an approach where importance scores are assigned to individual features indicating how much the feature contributed (positively or negatively) to the model [@ML_interpretability2019]. Here, we use SHAP (SHapley Additive exPlanations) values as the method of assigning importance values to each feature [@SHAP_values]. The top-10 most-important features (@suppfig-shap_values) were subset and used in training a subsequent model which saw performance increases and reduced computing time. This subsequent model was used as the final model in this analysis.
 
 ### Statistical Analyses
 
 Statisical analyses were performed on annual BFI and base flow values of instrumented streamgages. We examined temporal trends using the Mann-Kendall nonparametric trend test to determine the presence of monotonic trends [@kendall1970; @mann1945nonparametric]. The Mann-Kendall test was used to determine trends in BFI and trend significance of gauged reaches. This test is widely used in studies of this kind [@ficklin2016; @ayers2019; @woodhouse_udall22].
 
-Trends in BFI and base flow were produced using a Mann-Kendall test for monotonic trends. This test expects that the data is non-parametric and that the observations are not autocorrelated over time. Observations at 4 streamgages show significant autocorrelation, though only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) indicated a significant trend in BFI. Due to this autocorrelation, the streamgage was removed from the trend analysis as the autocorrelation may inflate the variance of the Mann-Kendall statistic leading to an over/underestimate of the trend (CITATION).
+Trends in BFI and base flow were produced using a Mann-Kendall test for monotonic trends. This test expects that the data is non-parametric and that the observations are not autocorrelated over time. Using a Durbin-Watson test, observations at 4 streamgages show significant autocorrelation, though only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) indicated a significant trend in BFI. Due to this autocorrelation, the streamgage was removed from the trend analysis as the autocorrelation may inflate the variance of the Mann-Kendall statistic leading to an over/underestimate of the trend [@MK_Hamed1998].
 
 Trends with a $\rho \le 0.05$ are considered significant.
 
@@ -169,9 +177,11 @@ Trends in BFI over the period of record for each streamgage in this analysis are
 
 ### BFI of Ungauged Catchments
 
-![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
-
 #### Model Validation
+
+Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between 'out of bag' (blind cross-validation of the model as if each site were ungauged) predicted and observed values is acceptable (R^2^ = 0.764) and indicates that the model performs well across the full dataset. The overall Root Mean Square Error (RMSE) is 0.129 and the overall percent bias (pbias) is -5.6. Model performance metrics across various classifications are summarized in @tbl-performance . The various performance metrics indicate that this regional model performs well across different spatial and climate classifications. Negative pbias values across all classifications, along with the overall pbias, suggest that the model consistently under-predicts BFI. Categories with relatively poor performances of R^2^ and Nash-Sutcliffe Efficiency (NSE) also show relatively large biases.
+
+![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
 
 | Classification Group         | n    | R2    | MSE   | RMSE  | MAE   | NSE   | pbias |
 |------------------------------|------|-------|-------|-------|-------|-------|-------|
@@ -188,19 +198,28 @@ Trends in BFI over the period of record for each streamgage in this analysis are
 
 : Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
 
-Consistently negative pbias values across all classifications suggest an under-prediction of BFI.
-
 #### Predictor Importance {#sec-predictor-importance}
+
+The predictors used to determine ungauged BFI were assessed to determine their importance. @suppfig-shap_values indicates the relative importance of predictors in the final XGBoost model along with the values of the . The most important feature in predicting long-term BFI is the elevation of the basin. While elevation has no physical impact on base flow characteristics, elevation has been shown to be one of the most important predictors in previous BFI studies [@singh2018; @beck2013]. The importance of catchment elevation is likely cumulative due to lower temperatures, orographic precipitation, and the persistence of snowpack at higher elevations. Seasonal snowpack duration has been shown to have a significant relationship to springflow, and thus groundwater recharge, in the region [@donovan_karst_2022]. This relationship is evident in further hydroclimate features. Higher temperatures tend to have a negative influence on BFI, while precipitation shows a mixed influence with some higher values negatively influencing BFI. This is likely due to a greater proportion of this precipitation leading to runoff, thus resulting in lower BFI values.
+
+The features describing land cover and land use indicate that a higher percentages of evergreen forest have a positive influence on predicted BFI. On the other hand, higher percentages shrub-land and developed land have negative influences on BFI. Hydrologic soil types also show strong trends in their influence on BFI. Soil-type C indicates soils with moderately high runoff potential when wetted, typically having 20-40% clay. Soil-type A has low runoff potential, facilitating rapid transmission of water through the soil profile [@nrcs2009]. With this being the case, higher percentages of soil-type C tend to have a negative influence on BFI while soil-type A percentages show a mixed influence. This mixed influence is likely due to SHAP values reflecting interactions between features in the model as opposed to direct relationships between feature and prediction. Regions where soil-type A dominate may be found along steep slopes or low vegetation which dominate the model prediction. Furthermore, the relationship between soil-type A and BFI may be non-linear and more complex in regional base-flow dynamics.
 
 #### Predicted Long-term Mean BFI
 
-![Predicted mean annual BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20241203.png){#fig-bfi-huc}
+The long-term BFI (1991-2020) for all stream reaches in Arizona of Strahler stream order 3 and greater are shown in @fig-bfi-streams and the regionalized (HUC-8) long-term BFI is shown in @fig-bfi-huc .
 
-![Predicted mean annual BFI values for all reaches of Strahler stream order 3 and greater](images/BFI_AllStream.png){#fig-bfi-streams}
+![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20241203.png){#fig-bfi-huc}
+
+![Predicted long-term BFI values for all stream reaches of Strahler stream order 3 and greater (1991-2020)](images/BFI_AllStream.png){#fig-bfi-streams}
 
 ## Conclusion {#sec-conclusion}
 
+-   This regional model, trained on a relatively sparse dataset over a region spanning 295,253 km^2^, is shown to predict BFI well spatially and across climate classifications.
+
+-   
+
 ## References {.unnumbered}
 
-::: {#refs}
-:::
+## Supporting Information
+
+![SHAP value plot of features used in final model. LC indicates land cover, and soil types are defined by hydrologic soil group.](images/supplemental/shap_summary.png){#suppfig-shap_values}
