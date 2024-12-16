@@ -6,6 +6,8 @@ manuscript:
 
 execute:
   freeze: auto
+  
+notebook-links: false
 
 format:
   html:
@@ -14,7 +16,7 @@ format:
     toc: true
   agu-pdf:
     default: true
-  jats:
+  jats: 
     default: true
 
 crossref:
