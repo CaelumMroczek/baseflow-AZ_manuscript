@@ -7,16 +7,15 @@ manuscript:
 execute:
   freeze: auto
 
-
 format:
   html:
     toc: true
-    comments:
-      hypothesis: true
   docx:
     toc: true
-  jats: default
-  agu-pdf: default
+  agu-pdf:
+    default: true
+  jats:
+    default: true
 
 crossref:
   custom:
@@ -26,5 +25,3 @@ crossref:
       reference-prefix: Figure S
       space-before-numbering: false
       latex-list-of-description: Supplementary Figure
-
-
