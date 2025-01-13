@@ -119,7 +119,7 @@ The implementation of machine learning models to predict hydrologic indices has 
 XGBoost operates by leveraging gradient boosting on decision tree algorithms, combining multiple low-variance models to produce a robust overall prediction. Gradient boosting works iteratively: the initial tree is trained on the target values, while subsequent trees are trained on the residual errors of the preceding tree. Each tree is assigned a weight based on its contribution to reducing error, and these weights are used to determine the influence of each tree in the final model. The ultimate prediction is made by aggregating the outputs of all $n$ weighted trees in the ensemble. In this study, the trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (@tbl-predictors). Certain features were further subdivided according to their areal coverage within each basin (e.g. land cover was divided into 16 subdivisions). This approach allowed the model to capture finer-scale spatial variability and improve predictive accuracy.
 
 |              | Variable                  | Source       | Geoprocessing          |
-|----------------|----------------------|----------------|-------------------|
+|-----------------|---------------------|-----------------|------------------|
 | Hydroclimate | Precipitation\*           | PRISM        | Basin average          |
 |              | Mean Temperature\*        | PRISM        | Basin average          |
 |              | Mean Evapotranspiration\* | TerraClimate | Basin average          |
