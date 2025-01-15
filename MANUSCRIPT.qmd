@@ -102,7 +102,7 @@ A 30-meter resolution Digital Elevation Model (DEM) of Arizona was used to deriv
 
 ### Base-flow separation {#sec-bf_sep}
 
-Directly measuring base flow and BFI presents unique challenges [@eckhardt2008]. The technique chosen to separate base flow has been shown to affect results, and the choice of base-flow separation method is subjective since ‘true’ BFI values are not known [@beck2013]. However, many methods have been developed to estimate these values. These methods include the use of tracers [@gonzales2009], graphical interpolation [@instituteofhydrology1980; @sloto1996], and digital filters [@arnold1995; @eckhardt2005; @lyne1979; @nathan1990]. These techniques have varying levels of applicability depending on the spatial scale, time span, and the scope of the study. Comparisons of various base-flow separation techniques have been made in previous studies [ e.g. @eckhardt2005; @eckhardt2008; @nathan1990]; this study does not explore the superiority of different methods.
+Directly measuring base flow and BFI presents unique challenges [@eckhardt2008]. The technique chosen to separate base flow has been shown to affect results, and the choice of base-flow separation method is subjective since ‘true’ BFI values are not known [@beck2013]. However, many methods have been developed to estimate these values. These methods include the use of tracers [@gonzales2009], graphical interpolation [@instituteofhydrology1980; @sloto1996], and digital filters [@arnold1995; @eckhardt2005; @lyne1979; @nathan1990]. These techniques have varying levels of applicability depending on the spatial scale, time span, and the scope of the study. Comparisons of various base-flow separation techniques have been made in previous studies [e.g. @eckhardt2005; @eckhardt2008; @nathan1990]; this study does not explore the superiority of different methods.
 
 Base flow was calculated using a single-parameter, recursive digital filter technique from @nathan1990. This base-flow separation technique is based on a recursive digital filter used in signal analysis that separates high-frequency signals (quickflow) from low-frequency signals (base flow) [@lyne1979]. @eckhardt2023 noted that recursive digital filters lack a physical basis, but as the method is easy to automate, objective, and repeatable, it is appropriate for a regional-scale study. The Lyne-Hollick filter has been used in multiple studies [@ARNOLD200021; @santhi2008; @bloomfield2009; @singh2018], and it takes the form of
 
@@ -119,7 +119,7 @@ The implementation of machine learning models to predict hydrologic indices has 
 XGBoost operates by leveraging gradient boosting on decision tree algorithms, combining multiple low-variance models to produce a robust overall prediction. Gradient boosting works iteratively: the initial tree is trained on the target values, while subsequent trees are trained on the residual errors of the preceding tree. Each tree is assigned a weight based on its contribution to reducing error, and these weights are used to determine the influence of each tree in the final model. The ultimate prediction is made by aggregating the outputs of all $n$ weighted trees in the ensemble. In this study, the trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (@tbl-predictors). Certain features were further subdivided according to their areal coverage within each basin (e.g. land cover was divided into 16 subdivisions). This approach allowed the model to capture finer-scale spatial variability and improve predictive accuracy.
 
 |              | Variable                  | Source       | Geoprocessing          |
-|------------------|--------------------|------------------|------------------|
+|------------------|-------------------|------------------|------------------|
 | Hydroclimate | Precipitation\*           | PRISM        | Basin average          |
 |              | Mean Temperature\*        | PRISM        | Basin average          |
 |              | Mean Evapotranspiration\* | TerraClimate | Basin average          |
@@ -137,6 +137,8 @@ XGBoost operates by leveraging gradient boosting on decision tree algorithms, co
 Our initial training dataset comprised 7,724 observations across 45 variables. To optimize the model's performance, we first conducted an exhaustive grid search combined with 5-fold cross-validation to identify the optimal hyperparameter values. The hyperparameters evaluated included the learning rate ($\eta$), minimum split loss ($\gamma$), maximum tree depth, minimum child weight, and the number of trees. While not an exhaustive list of all possible XGBoost hyperparameters, the range of values explored provided sufficient variation to ensure the selection of a high-performing model.The optimal hyperparameters were determined to be: 700 trees, a learning rate ($\eta$) of 0.05, a minimum split loss ($\gamma$) of 0.075, a maximum tree depth of 7, and a minimum child weight of 5. Using these values, the XGBoost model was trained on the dataset with 10-fold cross-validation.
 
 $K$-fold cross-validation provides an unbiased estimate of a model's accuracy on unseen data, while also insuring against overfitting or underfitting. In this approach, the data is randomly divided into $k$ folds of equal size. The model is trained on $k-1$ folds and tested on the remaining fold, referred to as the validation set. This process is repeated $k$ times, with each fold serving as the validation set exactly once. Each iteration trains an independent model with the same hyperparameters but using a different subset of training data. By averaging the model performance across all $k$ folds, we achieve a robust and reliable estimate of predictive accuracy. Root mean squared error (RMSE) was used as the performance metric for both model optimization and evaluation. RMSE provided a consistent and interpretable measure of the model’s accuracy throughout the training and validation process.
+
+![Schematic of k-fold cross validation. The dataset is randomly divided into k stratified folds. Each fold serves as the validation set once, while the remaining folds are combined to create a training set for model development. Performance metrics for the test set are calculated and recorded, and this process is repeated for all k folds.](images/k-fold_fig.png){#fig-k-fold width="6000"}
 
 #### Feature Selection
 
@@ -157,6 +159,47 @@ Statistical analyses were conducted on annual BFI and base-flow values from inst
 To check for autocorrelation, we applied the Durbin-Watson test, which revealed significant autocorrelation at four streamgages on an annual basis. Of these, only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) showed a significant trend in BFI. This streamgage was excluded from the trend analysis, as autocorrelation could inflate the variance of the Mann-Kendall statistic, potentially leading to biased trend estimates [@MK_Hamed1998]. Trends with a $\rho \le 0.05$ are considered significant.
 
 ## Results
+
+### BFI of Ungauged Catchments
+
+#### Model Validation
+
+Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between "out-of-bag" predictions (blind cross-validation, treating each site as ungauged) and observed values is acceptable (R^2^ = 0.764) indicating that the model performs well across the full dataset. The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%. Model performance metrics across various classifications are summarized in @tbl-performance. These performance metrics demonstrate that the regional model performs consistently well across different spatial and climatic classifications. However, the negative pbias values across all classifications, along with the overall pbias, indicate a systematic underprediction of BFI by the model. Categories with relatively lower R^2^ and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those specific contexts.
+
+![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
+
+| **Classification Group** | **n** | **R2** | **MSE** | **RMSE** | **MAE** | **NSE** | **pbias** |
+|---------|---------|---------|---------|---------|---------|---------|---------|
+| Climate - Monsoon Dominated | 3039 | 0.633 | 0.016 | 0.126 | 0.074 | 0.619 | -13.7 |
+| Climate - Snowmelt Dominated | 4685 | 0.733 | 0.015 | 0.121 | 0.087 | 0.725 | -3.5 |
+| PhysRegion - Basin&Range | 6147 | 0.733 | 0.016 | 0.127 | 0.084 | 0.724 | -6.3 |
+| PhysRegion - CO Plateau | 1577 | 0.846 | 0.011 | 0.104 | 0.073 | 0.843 | -3.8 |
+| Climate - Warm-Wet | 1506 | 0.693 | 0.014 | 0.117 | 0.077 | 0.685 | -8.2 |
+| Climate - Warm-Dry | 2351 | 0.693 | 0.022 | 0.147 | 0.092 | 0.675 | -11.9 |
+| Climate - Cool-Wet | 2350 | 0.738 | 0.011 | 0.106 | 0.078 | 0.736 | -1.7 |
+| Climate - Cool-Dry | 1517 | 0.831 | 0.012 | 0.111 | 0.078 | 0.827 | -4.3 |
+| Slope - High | 3795 | 0.776 | 0.012 | 0.111 | 0.079 | 0.771 | -3.3 |
+| Slope - Low | 3929 | 0.724 | 0.018 | 0.133 | 0.085 | 0.713 | -9.1 |
+
+: Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
+
+#### Predictor Importance {#sec-predictor-importance}
+
+The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in @fig-shap_values. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies [@singh2018; @beck2013]. The importance of elevation aligns with findings from @beck2013, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region [@donovan_karst_2022]. This relationship is further supported by hydroclimate features where higher temperatures tend to negatively influence BFI, while precipitation exhibits a mixed influence. In some cases, higher precipitation values correlate with lower BFI, likely due to a larger proportion of precipitation contributing to runoff rather than infiltration and groundwater recharge.
+
+![SHAP value plot of features used in final model. LC indicates land cover, and soil types are defined by hydrologic soil group.](images/shap_summary.png){#fig-shap_values}
+
+Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence [@nrcs2009]. The mixed effects of Soil Type A are likely due to SHAP values capturing interactions between features rather than direct relationships. For example, regions dominated by Soil Type A may also have steep slopes or sparse vegetation. Additionally, the relationship between Soil Type A and BFI is likely non-linear and influenced by the complex dynamics of regional base-flow processes.
+
+#### Predicted Long-term BFI
+
+The regionalized (HUC-8) long-term BFI (1991–2020) is shown in @fig-bfi-huc, while the long-term BFI for stream reaches with a Strahler stream order of 3 or greater is presented in @fig-bfi-streams. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Uplift in northeastern Arizona and the arid southern regions of the state.
+
+![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20241203.png){#fig-bfi-huc}
+
+![Predicted long-term BFI values for all stream reaches of Strahler stream order 3 and greater (1991-2020)](images/BFI_AllStream.png){#fig-bfi-streams}
+
+@fig-bfi-streams indicates the predicted long-term BFI for stream reaches in Arizona of a Strahler stream order of 3 or greater. Stream-level BFI values often correspond to the long-term BFI observed in HUC-8 basins, as geospatial predictor data were aggregated at the basin level. @fig-bfi-streams highlights stream density across the region, revealing areas with higher concentrations of perennial streams, particularly in regions with favorable hydrogeologic conditions, such as spring-fed systems in the Verde River and the Salt River headwaters. Conversely, lower BFI values are observed in arid regions and those with lower stream densities such as parts of the Little Colorado River Basin, where groundwater recharge is limited [@flint_flint07]. While BFI values and their spatial patterns may align with certain terrain features or climatic patterns, it is important to recognize that BFI is driven by complex interactions among multiple factors [@fig-shap_values].
 
 ### BFI of Gauged Catchments
 
@@ -212,54 +255,13 @@ The analysis shows that base flow and BFI trends most frequently align with prec
 
 : Coincident trends of climate variables (ET~O~, precipitation, temperature) with base flow and BFI trends. {#tbl-coincident-trends}
 
-### BFI of Ungauged Catchments
-
-#### Model Validation
-
-Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between "out-of-bag" predictions (blind cross-validation, treating each site as ungauged) and observed values is acceptable (R^2^ = 0.764) indicating that the model performs well across the full dataset. The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%. Model performance metrics across various classifications are summarized in @tbl-performance. These performance metrics demonstrate that the regional model performs consistently well across different spatial and climatic classifications. However, the negative pbias values across all classifications, along with the overall pbias, indicate a systematic underprediction of BFI by the model. Categories with relatively lower R^2^ and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those specific contexts.
-
-![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
-
-| **Classification Group** | **n** | **R2** | **MSE** | **RMSE** | **MAE** | **NSE** | **pbias** |
-|---------|---------|---------|---------|---------|---------|---------|---------|
-| Climate - Monsoon Dominated | 3039 | 0.633 | 0.016 | 0.126 | 0.074 | 0.619 | -13.7 |
-| Climate - Snowmelt Dominated | 4685 | 0.733 | 0.015 | 0.121 | 0.087 | 0.725 | -3.5 |
-| PhysRegion - Basin&Range | 6147 | 0.733 | 0.016 | 0.127 | 0.084 | 0.724 | -6.3 |
-| PhysRegion - CO Plateau | 1577 | 0.846 | 0.011 | 0.104 | 0.073 | 0.843 | -3.8 |
-| Climate - Warm-Wet | 1506 | 0.693 | 0.014 | 0.117 | 0.077 | 0.685 | -8.2 |
-| Climate - Warm-Dry | 2351 | 0.693 | 0.022 | 0.147 | 0.092 | 0.675 | -11.9 |
-| Climate - Cool-Wet | 2350 | 0.738 | 0.011 | 0.106 | 0.078 | 0.736 | -1.7 |
-| Climate - Cool-Dry | 1517 | 0.831 | 0.012 | 0.111 | 0.078 | 0.827 | -4.3 |
-| Slope - High | 3795 | 0.776 | 0.012 | 0.111 | 0.079 | 0.771 | -3.3 |
-| Slope - Low | 3929 | 0.724 | 0.018 | 0.133 | 0.085 | 0.713 | -9.1 |
-
-: Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
-
-#### Predictor Importance {#sec-predictor-importance}
-
-The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in @fig-shap_values. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies [@singh2018; @beck2013]. The importance of elevation aligns with findings from @beck2013, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region [@donovan_karst_2022]. This relationship is further supported by hydroclimate features where higher temperatures tend to negatively influence BFI, while precipitation exhibits a mixed influence. In some cases, higher precipitation values correlate with lower BFI, likely due to a larger proportion of precipitation contributing to runoff rather than infiltration and groundwater recharge.
-
-![SHAP value plot of features used in final model. LC indicates land cover, and soil types are defined by hydrologic soil group.](images/shap_summary.png){#fig-shap_values}
-
-Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence [@nrcs2009]. The mixed effects of Soil Type A are likely due to SHAP values capturing interactions between features rather than direct relationships. For example, regions dominated by Soil Type A may also have steep slopes or sparse vegetation. Additionally, the relationship between Soil Type A and BFI is likely non-linear and influenced by the complex dynamics of regional base-flow processes.
-
-#### Predicted Long-term BFI
-
-The regionalized (HUC-8) long-term BFI (1991–2020) is shown in @fig-bfi-huc, while the long-term BFI for stream reaches with a Strahler stream order of 3 or greater is presented in @fig-bfi-streams. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Uplift in northeastern Arizona and the arid southern regions of the state.
-
-![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20241203.png){#fig-bfi-huc}
-
-![Predicted long-term BFI values for all stream reaches of Strahler stream order 3 and greater (1991-2020)](images/BFI_AllStream.png){#fig-bfi-streams}
-
-@fig-bfi-streams indicates the predicted long-term BFI for stream reaches in Arizona of a Strahler stream order of 3 or greater. Stream-level BFI values often correspond to the long-term BFI observed in HUC-8 basins, as geospatial predictor data were aggregated at the basin level. @fig-bfi-streams highlights stream density across the region, revealing areas with higher concentrations of perennial streams, particularly in regions with favorable hydrogeologic conditions, such as spring-fed systems in the Verde River and the Salt River headwaters. Conversely, lower BFI values are observed in arid regions and those with lower stream densities such as parts of the Little Colorado River Basin, where groundwater recharge is limited [@flint_flint07]. While BFI values and their spatial patterns may align with certain terrain features or climatic patterns, it is important to recognize that BFI is driven by complex interactions among multiple factors [@fig-shap_values].
-
 ## Summary & Conclusions {#sec-conclusion}
 
 This study provides new insights into base-flow dynamics and groundwater contributions in Arizona’s dryland rivers by combining an analysis of instrumented streamflow records with machine learning predictions for ungauged basins. The results highlight significant spatial variability in BFI, with approximately 32% of Arizona’s long-term streamflow originating from groundwater discharge. Regions such as the Grand Canyon and Mogollon Rim demonstrate high BFI values due to strong groundwater-surface water interactions, while areas like the Little Colorado River Basin exhibit low BFI values, reflecting limited groundwater recharge.
 
-Our analysis of BFI trends in gauged catchments revealed that precipitation is the primary driver of base-flow variability, with evapotranspiration and temperature contributing additional complexity. These findings emphasize the critical role of climate-hydrology interactions in shaping groundwater contributions to streamflow. Inverse trends between temperature and BFI suggest that further warming could reduce groundwater contributions to streamflow. Coincident trends in precipitation and BFI further underscore the importance understanding recharge processes in arid and semi-arid landscapes.
-
 Using an XGBoost machine learning algorithm, we successfully predicted long-term BFI in ungauged basins, achieving strong model performance (R² = 0.764, RMSE = 0.129). The model performed well across all classifications, demonstrating its robustness in capturing base-flow dynamics across a region with substantial variability in climate, elevation, and physiographic characteristics. Key predictors included elevation, land cover, and soil type, highlighting the importance of integrating hydroclimate and physiographic characteristics into regional hydrological models. These predictions address the limitations posed by Arizona’s sparse streamgage network, offering a scalable approach to estimate BFI in data-limited regions.
+
+Our analysis of BFI trends in gauged catchments revealed that precipitation is the primary driver of base-flow variability, with evapotranspiration and temperature contributing additional complexity. These findings emphasize the critical role of climate-hydrology interactions in shaping groundwater contributions to streamflow. Inverse trends between temperature and BFI suggest that further warming could reduce groundwater contributions to streamflow. Coincident trends in precipitation and BFI further underscore the importance understanding recharge processes in arid and semi-arid landscapes.
 
 While there has been an increase of stream gages in Arizona to comply with regulatory imperatives, such as the Clean Water Act, these gages are not of sufficient quality for base-flow analyses. New, non-USGS stream gages are typically installed by flood control districts for flood flow monitoring, and do not accurately track base flow. New USGS stream gages have been added over the past 10 years to address instream flow rights and to improve the density of monitoring in the future.
 
