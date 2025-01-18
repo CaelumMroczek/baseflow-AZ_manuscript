@@ -15,27 +15,45 @@ author:
       - Software
       - Data curation
       - Writing - Original Draft
+      - Writing – Review & Editing 
     affiliations:
       - 'School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA'
       
   - name: Abraham Springer
     orcid: 0000-0003-4826-9124
     corresponding: false
-    roles: []
+    roles:
+      - Conceptualization
+      - Funding acquisition
+      - Project administration
+      - Resources
+      - Supervision
+      - Writing – Review & Editing 
     affiliations:
       - 'School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA'
       
   - name: Neha Gupta
     orcid: 0000-0002-2247-3509
     corresponding: false
-    roles: []
+    roles: 
+      - Conceptualization
+      - Funding acquisition
+      - Project administration
+      - Resources
+      - Supervision
+      - Writing – Review & Editing 
     affiliations:
       - 'Department of Hydrology and Atmospheric Sciences, University of Arizona, Tucson, AZ, USA'
       
   - name: Benjamin Lucas
     orcid: 0000-0002-2021-3076
     corresponding: false
-    roles: []
+    roles: 
+      - Conceptualization
+      - Resources
+      - Supervision
+      - Software
+      - Writing – Review & Editing 
     affiliations:
       - 'Department of Mathematics and Statistics, Northern Arizona University, Flagstaff, AZ, USA'
 
