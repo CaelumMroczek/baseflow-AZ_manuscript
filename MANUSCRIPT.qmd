@@ -1,6 +1,5 @@
 ---
 title: Regional Base-Flow Index in Arid Landscapes Using Machine Learning and Instrumented Records
-subtitle: Regional-scale Base-flow Index of Gauged and Ungauged Basins in Drylands |  | Estimating Base-Flow Index in Gauged and Ungauged Dryland Basins
 author:
   - name: Caelum Mroczek
     orcid: 0009-0005-6695-0134
@@ -136,19 +135,19 @@ The implementation of machine learning models to predict hydrologic indices has 
 
 XGBoost operates by leveraging gradient boosting on decision tree algorithms, combining multiple low-variance models to produce a robust overall prediction. Gradient boosting works iteratively: the initial tree is trained on the target values, while subsequent trees are trained on the residual errors of the preceding tree. Each tree is assigned a weight based on its contribution to reducing error, and these weights are used to determine the influence of each tree in the final model. The ultimate prediction is made by aggregating the outputs of all $n$ weighted trees in the ensemble. In this study, the trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (@tbl-predictors). Certain features were further subdivided according to their areal coverage within each basin (e.g. land cover was divided into 16 subdivisions). This approach allowed the model to capture finer-scale spatial variability and improve predictive accuracy.
 
-|              | Variable                  | Source       | Geoprocessing          |
+|   | Variable | Source | Geoprocessing |
 |------------------|-------------------|------------------|------------------|
-| Hydroclimate | Precipitation\*           | PRISM        | Basin average          |
-|              | Mean Temperature\*        | PRISM        | Basin average          |
-|              | Mean Evapotranspiration\* | TerraClimate | Basin average          |
-| Geospatial   | Elevation\*               | DEM          | Basin average          |
-|              | Area                      | DEM          | Basin average          |
-|              | Slope                     | DEM          | Basin average          |
-|              | Aspect                    | DEM          | Percent areal coverage |
-|              | Land Cover\*              | NLCD         | Percent areal coverage |
-|              | Hydrologic Soil Group\*   | SSURGO       | Percent areal coverage |
-|              | Geology                   | USGS         | Percent areal coverage |
-|              | Karst                     | USGS         | Percent areal coverage |
+| Hydroclimate | Precipitation\* | PRISM | Basin average |
+|  | Mean Temperature\* | PRISM | Basin average |
+|  | Reference Evapotranspiration\* | TerraClimate | Basin average |
+| Geospatial | Elevation\* | DEM | Basin average |
+|  | Area | DEM | Basin average |
+|  | Slope | DEM | Basin average |
+|  | Aspect | DEM | Percent areal coverage |
+|  | Land Cover\* | NLCD | Percent areal coverage |
+|  | Hydrologic Soil Group\* | SSURGO | Percent areal coverage |
+|  | Geology | USGS | Percent areal coverage |
+|  | Karst | USGS | Percent areal coverage |
 
 : Basin-characteristic variables used as initial features in XGBoost model. Starred features are maintained in the final, dimensionality-reduced model. {#tbl-predictors}
 
@@ -205,7 +204,7 @@ Predicted values of BFI are plotted against observed values for the entire perio
 
 The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in @fig-shap_values. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies [@singh2018; @beck2013]. The importance of elevation aligns with findings from @beck2013, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region [@donovan_karst_2022]. This relationship is further supported by hydroclimate features where higher temperatures tend to negatively influence BFI, while precipitation exhibits a mixed influence. In some cases, higher precipitation values correlate with lower BFI, likely due to a larger proportion of precipitation contributing to runoff rather than infiltration and groundwater recharge.
 
-![SHAP value plot of features used in final model. LC indicates land cover, and soil types are defined by hydrologic soil group.](images/shap_summary.png){#fig-shap_values}
+![SHAP value plot of features used in final model. Land cover features are indicated by the percentage of cover by each land cover type and soil types are defined by hydrologic soil group.](images/shap_summary.png){#fig-shap_values}
 
 Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence [@nrcs2009]. The mixed effects of Soil Type A are likely due to SHAP values capturing interactions between features rather than direct relationships. For example, regions dominated by Soil Type A may also have steep slopes or sparse vegetation. Additionally, the relationship between Soil Type A and BFI is likely non-linear and influenced by the complex dynamics of regional base-flow processes.
 
@@ -281,7 +280,7 @@ Using an XGBoost machine learning algorithm, we successfully predicted long-term
 
 Our analysis of BFI trends in gauged catchments revealed that precipitation is the primary driver of base-flow variability, with evapotranspiration and temperature contributing additional complexity. These findings emphasize the critical role of climate-hydrology interactions in shaping groundwater contributions to streamflow. Inverse trends between temperature and BFI suggest that further warming could reduce groundwater contributions to streamflow. Coincident trends in precipitation and BFI further underscore the importance of understanding recharge processes, especially in arid and semi-arid landscapes, where precipitation events play key roles in replenishing groundwater.
 
-However, the utility of the streamgage networks for base-flow analyses in Arizona is limited by their design and focus.There has been an increase in the number of streamgages in the region to meet regulatory imperatives, such as the Clean Water Act. Even so, many of these gages are not suited for base-flow studies because they emphasize flood monitoring and lack the ability to accurately measure low-flow dynamics. New, non-USGS streamgages are typically installed by flood control districts (e.g. the ALERT system) and are designed for tracking flood flows rather than base flow. New USGS streamgages have been added over the past decade to address instream flow rights and to improve the density of monitoring in the future.
+However, the utility of the streamgage networks for base-flow analyses in Arizona is limited by their design and focus. There has been an increase in the number of streamgages in the region to meet regulatory imperatives, such as the Clean Water Act. Even so, many of these gages are not suited for base-flow studies because they emphasize peak flow monitoring and lack the ability to accurately measure low-flow dynamics [@flood-control2020]. New, non-USGS streamgages are typically installed by flood control districts (e.g. the ALERT system) and are designed for tracking flood flows rather than base flow. New USGS streamgages have been added over the past decade to address instream flow rights and to improve the density of monitoring in the future.
 
 This study demonstrates the benefits of combining observational records with machine learning to improve our understanding of streamflow processes in drylands. Future work should explore the projected effects of climate change on base-flow processes and developing models for other data-poor regions. The framework presented here has broad applicability to other arid and semi-arid regions worldwide and can inform water resource management strategies aimed at addressing water scarcity and adapting to climate variability.
 
