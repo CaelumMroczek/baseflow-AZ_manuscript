@@ -71,8 +71,8 @@ plain-language-summary: |
   
 key-points:
   - Approximately 32% of Arizona's streamflow originates from groundwater discharge, with significant spatial and climatic variability. 
-  - A machine learning model (XGBoost) successfully predicted long-term BFI in ungauged basins, addressing gaps in Arizonas sparse streamgage network. 
-  - Base-flow trends align most closely with precipitation changes, emphasizing the critical role of climate in shaping groundwater-surface water dynamics in dryland regions.
+  - A machine learning model (XGBoost) successfully predicted long-term BFI in ungauged basins, addressing gaps in a sparse streamgage network. 
+  - Base-flow trends align most closely with precipitation changes, emphasizing the role of climate in shaping groundwater-surface water dynamics in dryland regions.
   
 date: last-modified
 bibliography: references.bib
@@ -91,7 +91,7 @@ The Base-Flow Index (BFI) is the ratio of the long-term mean base-flow volume to
 
 Advancements in machine learning provide tools to predict hydrologic indices in ungauged basins, addressing the limitations of sparse streamgage networks. To tackle the challenge of quantifying base flow in ungauged catchments, numerous studies have applied both regression and machine learning methods. @ahiablame2013 found that using a regression model to estimate annual base flow of ungauged catchments was reasonably easy and accurate. @beck2013 overcame the nonlinearity of basin characteristics and improved results of multivariate analyses by using artificial neural networks to estimate BFI globally. @singh2018 implemented a random forest algorithm to predict long-term BFI for ungauged catchments across New Zealand. These applications demonstrate the versatility and effectiveness of machine learning in capturing complex ecohydrologic dynamics and improving our understanding of groundwater contributions to streamflow.
 
-This study develops a technique for estimating BFI in ungauged basins across Arizona and evaluates the state’s long-term BFI. Regional trends in base flow and BFI at instrumented sites are also analyzed, with these trends being linked to coincident trends in precipitation, evapotranspiration (ET~O~), and temperature over the same periods. Using a machine learning model trained on the hydrogeologic characteristics of surface water basins, we estimate the mean BFI for ungauged basins from 1991 to 2020. This approach helps address the spatial gaps in the streamgage network, which is relatively sparse across the state. The results offer novel insights into low-flow processes in both gauged and ungauged basins, enhancing our understanding of climate controls on consistent flows in Arizona. This study contributes to a more comprehensive view of hydrological dynamics in the context of arid and semi-arid landscapes.
+This study develops a technique for estimating BFI in ungauged basins across Arizona and evaluates the state’s long-term BFI. Regional trends in base flow and BFI at instrumented sites are also analyzed, with these trends being linked to coincident trends in precipitation, reference evapotranspiration (ET~O~), and temperature over the same periods. Using a machine learning model trained on the hydrogeologic characteristics of surface water basins, we estimate the mean BFI for ungauged basins from 1991 to 2020. This approach helps address the spatial gaps in the streamgage network, which is relatively sparse across the state. The results offer novel insights into low-flow processes in both gauged and ungauged basins, enhancing our understanding of climate controls on consistent flows in Arizona. This study contributes to a more comprehensive view of hydrological dynamics in the context of arid and semi-arid landscapes.
 
 ## Data & Methods {#sec-data-methods}
 
@@ -113,7 +113,7 @@ Watersheds across the United States are delineated by the USGS using a hydrologi
 
 Annual precipitation and temperature data came from the PRISM climate group at Oregon State University at a resolution of 4 km (<https://prism.oregonstate.edu;> [@daly2008]). The PRISM dataset provides valuable insights into regional climate in ungauged regions and has been shown to perform well across the southwestern US [@buban_PRISM]. Instead of the water year, PRISM data uses a calendar-year format, which was adopted for consistency in the water balance. Although this may introduce challenges in the annual estimates due to inter-annual snow storage, the use of long-term annual averages is likely to reduce any potential errors [@reitz2017].
 
-Annual reference evapotranspiration (ET~O~) data came from TerraClimate, a 4-km grid climatalogical data set [@abatzoglou2018]. TerraClimate uses a Penman-Monteith approach to generate a reference evapotranspiration. The ET~O~ values were calculated assuming a reference grass surface across the landscape with unlimited water. In the drylands of the southwestern US, ET~O~ typically exceeds precipitation annually [@zomer2022].
+Annual reference evapotranspiration (ET~O~) data came from TerraClimate, a 4-km grid climatological data set [@abatzoglou2018]. TerraClimate uses a Penman-Monteith approach to generate a reference evapotranspiration. The ET~O~ values were calculated assuming a reference grass surface across the landscape with unlimited water. In the drylands of the southwestern US, ET~O~ typically exceeds precipitation annually [@zomer2022].
 
 A 30-meter resolution Digital Elevation Model (DEM) of Arizona was used to derive key basin characteristics: basin area, average slope, and the proportion of each basin oriented toward north or south aspects. Various geospatial variables, such as aspect, were disaggregated then averaged to assess the areal percentage of each sub-variable within individual HUC 8 basins. By calculating these percentages, we aimed to get a more comprehensive understanding of landscape composition across space. Land cover was acquired from USGS-NLCD (National Land Cover Database), hydrologic soil group from SSURGO (Soil Survey Geographic Database), and underlying geology and karst from USGS were all similarly averaged across the basins. Aggregating variables to align with the HUC 8 boundaries allowed for more precise predictions of BFI by integrating spatial variations within each basin.
 
@@ -183,10 +183,10 @@ To check for autocorrelation, we applied the Durbin-Watson test, which revealed 
 
 Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between "out-of-bag" predictions (blind cross-validation, treating each site as ungauged) and observed values is acceptable (R^2^ = 0.764) indicating that the model performs well across the full dataset. The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%. Model performance metrics across various classifications are summarized in @tbl-performance. These performance metrics demonstrate that the regional model performs consistently well across different spatial and climatic classifications. However, the negative pbias values across all classifications, along with the overall pbias, indicate a systematic underprediction of BFI by the model. Categories with relatively lower R^2^ and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those specific contexts.
 
-![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
+![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed, green line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
 
 | **Classification Group** | **n** | **R2** | **MSE** | **RMSE** | **MAE** | **NSE** | **pbias** |
-|----|----|----|----|----|----|----|----|
+|---------|---------|---------|---------|---------|---------|---------|---------|
 | Climate - Monsoon Dominated | 3039 | 0.633 | 0.016 | 0.126 | 0.074 | 0.619 | -13.7 |
 | Climate - Snowmelt Dominated | 4685 | 0.733 | 0.015 | 0.121 | 0.087 | 0.725 | -3.5 |
 | PhysRegion - Basin&Range | 6147 | 0.733 | 0.016 | 0.127 | 0.084 | 0.724 | -6.3 |
@@ -198,7 +198,7 @@ Predicted values of BFI are plotted against observed values for the entire perio
 | Slope - High | 3795 | 0.776 | 0.012 | 0.111 | 0.079 | 0.771 | -3.3 |
 | Slope - Low | 3929 | 0.724 | 0.018 | 0.133 | 0.085 | 0.713 | -9.1 |
 
-: Performance of model predictions for BFI for all sites split by various classifications. n is number of observatios, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sucliffe efficiency, and pbias is percent bias. {#tbl-performance}
+: Performance of model predictions for BFI for all sites split by various classifications. n is number of observations, R^2^ is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sutcliffe efficiency, and pbias is percent bias. {#tbl-performance}
 
 #### Predictor Importance {#sec-predictor-importance}
 
@@ -241,7 +241,7 @@ Classifications presented in @tbl-trends were determined based on precipitation 
 Statistically significant decreasing trends in BFI were more common than increasing trends across all site classifications (@tbl-trends). While decreasing trends dominate, both increasing and decreasing trends are observed within each classification. Monsoon-dominated regions exhibit a higher proportion of significant negative trends (24.1%) compared to snowmelt-dominated regions (10.2%), suggesting that monsoon-dominated systems are more consistently correlated with declining base flow. Among climate classifications, warm-dry climates have the highest proportion of negative trends (20.0%), followed by warm-wet climates (19.4%), indicating that regions with higher temperatures are more prone to base flow declines. Low-slope regions show a greater prevalence of negative trends (20.4%) compared to high-slope regions (11.8%). This suggests that flatter areas may be more susceptible to base-flow reductions, potentially due to differences in hydrologic connectivity and recharge dynamics.
 
 | **Classification Group** | **n** | **n_pos** | **n_neg** | **perc_pos** | **perc_neg** |
-|----|----|----|----|----|----|
+|------------|------------|------------|------------|------------|------------|
 | Precipitation - Monsoon Dominated | 87 | 8 | 21 | 0.092 | 0.241 |
 | Precipitation - Snowmelt Dominated | 118 | 9 | 12 | 0.076 | 0.102 |
 | Physiographic Region - Basin and Range | 156 | 14 | 26 | 0.090 | 0.167 |
@@ -257,7 +257,7 @@ Statistically significant decreasing trends in BFI were more common than increas
 
 #### Coincident Climate Trends
 
-Given the variations in the period of record across the instrumented network (see SUPPLEMENTAL - Period of Record figure), we analyzed trends in base flow and BFI in relation to coincident trends in climate variables. Trends are classified as coincident when the direction of the climate variable trend (positive or negative) aligns with the trend observed in base flow or BFI (@tbl-coincident-trends). This analysis includes both significant and non-significant trends, which is appropriate where the influence of complex, interconnected processes may not always manifest as statistically significant patterns over limited observational periods [@ficklin2016].
+Given the variations in the period of record across the instrumented network (see Figure S2), we analyzed trends in base flow and BFI in relation to coincident trends in climate variables. Trends are classified as coincident when the direction of the climate variable trend (positive or negative) aligns with the trend observed in base flow or BFI (@tbl-coincident-trends). This analysis includes both significant and non-significant trends, which is appropriate where the influence of complex, interconnected processes may not always manifest as statistically significant patterns over limited observational periods [@ficklin2016].
 
 |           | **Climate Variable** | **Coincidence Percentage (%)** |
 |-----------|:--------------------:|:------------------------------:|
@@ -280,7 +280,7 @@ Using an XGBoost machine learning algorithm, we successfully predicted long-term
 
 Our analysis of BFI trends in gauged catchments revealed that precipitation is the primary driver of base-flow variability, with evapotranspiration and temperature contributing additional complexity. These findings emphasize the critical role of climate-hydrology interactions in shaping groundwater contributions to streamflow. Inverse trends between temperature and BFI suggest that further warming could reduce groundwater contributions to streamflow. Coincident trends in precipitation and BFI further underscore the importance of understanding recharge processes, especially in arid and semi-arid landscapes, where precipitation events play key roles in replenishing groundwater.
 
-However, the utility of the streamgage networks for base-flow analyses in Arizona is limited by their design and focus. There has been an increase in the number of streamgages in the region to meet regulatory imperatives, such as the Clean Water Act. Even so, many of these gages are not suited for base-flow studies because they emphasize peak flow monitoring and lack the ability to accurately measure low-flow dynamics [@flood-control2020]. New, non-USGS streamgages are typically installed by flood control districts (e.g. the ALERT system) and are designed for tracking flood flows rather than base flow. New USGS streamgages have been added over the past decade to address instream flow rights and to improve the density of monitoring in the future.
+The utility of the streamgage networks for base-flow analyses in Arizona is limited by their design and focus. There has been an increase in the number of streamgages in the region to meet regulatory imperatives, such as the Clean Water Act. Even so, many of these gages are not suited for base-flow studies because they emphasize peak flow monitoring and lack the ability to accurately measure low-flow dynamics [@flood-control2020]. New, non-USGS streamgages are typically installed by flood control districts (e.g. the ALERT system) and are designed to track flood flows rather than base flow. New USGS streamgages have been added over the past decade to address instream flow rights and to improve the density of monitoring in the future.
 
 This study demonstrates the benefits of combining observational records with machine learning to improve our understanding of streamflow processes in drylands. Future work should explore the projected effects of climate change on base-flow processes and developing models for other data-poor regions. The framework presented here has broad applicability to other arid and semi-arid regions worldwide and can inform water resource management strategies aimed at addressing water scarcity and adapting to climate variability.
 
