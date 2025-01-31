@@ -288,4 +288,12 @@ The utility of the streamgage networks for base-flow analyses in Arizona is limi
 
 This study demonstrates the benefits of combining observational records with machine learning to improve our understanding of streamflow processes in drylands. Future work should explore the projected effects of climate change on base-flow processes and developing models for other data-poor regions. The framework presented here has broad applicability to other arid and semi-arid regions worldwide and can inform water resource management strategies aimed at addressing water scarcity and adapting to climate variability.
 
+## Open Research
+
+All code and data necessary to reproduce the analyses presented in this manuscript are available at: <https://github.com/CaelumMroczek/baseflow-AZ>.
+
+## Acknowledgements
+
+The authors would like to express gratitude to the following people for helpful discussion and suggestions: Cole Denver, Aidan Houlgate, Rayni Lewis, Ryan Lima, Quentin McCalla, Isaiah Mesa, Georgia Roberts. This research was supported by an Arizona Board of Regents’ Grant from the Technology and Research Initiative Fund governed by A.R.S. § 15-1648. The authors acknowledge the financial support provided by this grant, which made this study possible.
+
 ## References {.unnumbered}
