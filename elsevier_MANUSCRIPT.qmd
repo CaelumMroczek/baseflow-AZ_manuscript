@@ -14,6 +14,7 @@ format:
         - Approximately 32% of Arizona's streamflow originates from groundwater discharge, with significant spatial and climatic variability. 
         - A machine learning model (XGBoost) successfully predicted long-term BFI in ungauged basins, addressing gaps in a sparse streamgage network. 
         - Base-flow trends align most closely with precipitation changes, emphasizing the role of climate in shaping groundwater-surface water dynamics in dryland regions.
+bibliography: references.bib
 ---
 
 ## Introduction {#sec-intro}
@@ -116,7 +117,9 @@ To check for autocorrelation, we applied the Durbin-Watson test, which revealed 
 
 #### Model Validation
 
-Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between "out-of-bag" predictions (blind cross-validation, treating each site as ungauged) and observed values is acceptable (R^2^ = 0.764) indicating that the model performs well across the full dataset. The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%. Model performance metrics across various classifications are summarized in @tbl-performance. These performance metrics demonstrate that the regional model performs consistently well across different spatial and climatic classifications. However, the negative pbias values across all classifications, along with the overall pbias, indicate a systematic underprediction of BFI by the model. Categories with relatively lower R^2^ and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those specific contexts.
+Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in @fig-actual_predicted . The agreement between "out-of-bag" predictions (blind cross-validation, treating each site as ungauged) and observed values indicate strong model performance across the full dataset (R^2^ = 0.764). The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%.
+
+Model performance metrics across various classifications are summarized in @tbl-performance. These metrics show consistent model performance across spatial and climatic classifications. However, the negative pbias values across all classifications indicate a systematic underprediction of BFI. Categories with relatively lower R^2^ and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those contexts.
 
 ![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed, green line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
 
@@ -137,31 +140,31 @@ Predicted values of BFI are plotted against observed values for the entire perio
 
 #### Predictor Importance {#sec-predictor-importance}
 
-The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in @fig-shap_values. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies [@singh2018; @beck2013]. The importance of elevation aligns with findings from @beck2013, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region [@donovan_karst_2022]. This relationship is further supported by hydroclimate features where higher temperatures tend to negatively influence BFI, while precipitation exhibits a mixed influence. In some cases, higher precipitation values correlate with lower BFI, likely due to a larger proportion of precipitation contributing to runoff rather than infiltration and groundwater recharge.
+The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in @fig-shap_values. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies [@singh2018; @beck2013]. The importance of elevation aligns with findings from @beck2013, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region [@donovan_karst_2022].
 
 ![SHAP value plot of features used in final model. Land cover features are indicated by the percentage of cover by each land cover type and soil types are defined by hydrologic soil group.](images/shap_summary.png){#fig-shap_values}
 
-Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence [@nrcs2009]. The mixed effects of Soil Type A are likely due to SHAP values capturing interactions between features rather than direct relationships. For example, regions dominated by Soil Type A may also have steep slopes or sparse vegetation. Additionally, the relationship between Soil Type A and BFI is likely non-linear and influenced by the complex dynamics of regional base-flow processes.
+Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence [@nrcs2009].
 
-#### Predicted Long-term BFI
+#### Predicted BFI in Ungauged Basins
+
+The regionalized (HUC-8) long-term BFI (1991–2020) is shown in @fig-bfi-huc. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Plateau in northeastern Arizona and the arid southern regions of the state.
 
 ![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20250129.png){#fig-bfi-huc}
 
-The regionalized (HUC-8) long-term BFI (1991–2020) is shown in @fig-bfi-huc. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Plateau in northeastern Arizona and the arid southern regions of the state. While BFI values and their spatial patterns may align with certain terrain features or climatic patterns, it is important to recognize that BFI is driven by complex interactions among multiple factors [@fig-shap_values].
+### Observed BFI in Gauged Catchments
 
-### BFI of Gauged Catchments
+The long-term BFI for the 205 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi . The long-term mean BFI is 0.32, indicating that \~32% of long-term streamflow in Arizona likely originates from groundwater discharge and other delayed sources. The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona, where highly karstic geology facilitates rapid subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. High BFI values (\>0.8) are also found at the spring-fed headwaters of the Verde River and Fossil Creek.
+
+The stream reaches of the Little Colorado River Basin (northeastern Arizona) indicate consistently low BFI values (\< 0.2). This is likely due to low-yielding perched aquifers underlying the Defiance Plateau in northeastern Arizona, which are hydrologically connected to surface streams, while the high-yield, confined regional aquifer is much deeper [@blanchard02].
 
 ![Long-term BFI for the period of record from instrumented stream flow data.](images/BFI_Instrumented_20241203.png){#fig-instrumented-bfi}
 
-The long-term BFI for the 205 gauged reaches across Arizona is illustrated in @fig-instrumented-bfi . The long-term mean BFI is 0.32, indicating that \~32% of long-term streamflow in Arizona likely originates from groundwater discharge and other delayed sources. The highest BFI values (\>0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets [@chambless_deep-karst_2023]. Relatively high BFI values (\>0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by @wolock2003.
+#### Trends in Base Flow and BFI {#sec-bfi-trends}
 
-The stream reaches of the Little Colorado River Basin (northeastern Arizona) indicate consistently low BFI values (\< 0.2). This is likely due to low-yielding perched aquifers underlying the Defiance Plateau in northeastern Arizona, which are hydrologically connected to surface streams, while the high-yield, confined regional aquifer is much deeper [@blanchard02]. A notable tendency emerges along most major rivers in the study area: upstream reaches tend to exhibit higher BFI values, while downstream reaches display lower values. This pattern is presumed to result from greater groundwater-surface water interactions at stream headwaters, influenced by spring outlets, and the dilution of base flow as water moves downstream. This trend is particularly evident along the Gila River, Verde River, and Little Colorado River in Arizona.
+Trends in BFI over the period of record for each streamgage are illustrated in @fig-instrumented-trend and summarized in @tbl-trends. Base flow and BFI trends were analyzed across all instrumented sites over their respective periods of record using the Mann–Kendall test. Statistically significant trends were observed in both metrics, with a 72.2% coincidence rate between significant base flow and BFI trends, indicating a strong dependence of BFI on base-flow dynamics.
 
-#### Trends in Base Flow & BFI {#sec-bfi-trends}
-
-Trends in BFI over the period of record for each streamgage in this analysis are illustrated in @fig-instrumented-trend and @tbl-trends. Base flow and BFI trends were analyzed across all instrumented sites over their respective periods of record using the Mann–Kendall test. Statistically significant trends were observed in both metrics, with a 72.20% coincidence rate between significant base flow and BFI trends, indicating a strong dependence of BFI on base-flow dynamics.
-
-@fig-instrumented-trend illustrates the spatial variation in BFI trends across the study area. Statistically significant decreasing trends are observed at 16.1% of sites, while increasing trends are found at 8.8% of sites, with no clear regional patterns for either. In the Basin and Range physiographic region, 9% of sites show increasing trends, while 16.7% exhibit decreasing trends. In the Colorado Plateau region, increasing trends occur at 6.1% of sites, and decreasing trends are observed at 14.3% of sites.
+@fig-instrumented-trend illustrates the spatial variation in BFI trends across the study area. Statistically significant decreasing trends are observed at 16.1% of sites, while increasing trends are found at 8.8% of sites. No consistent regional patterns are evident.
 
 ![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.](images/BFITrends_20241203.png){#fig-instrumented-trend}
 
@@ -188,7 +191,9 @@ Statistically significant decreasing trends in BFI were more common than increas
 
 #### Coincident Climate Trends
 
-Given the variations in the period of record across the instrumented network (see Figure S2), we analyzed trends in base flow and BFI in relation to coincident trends in climate variables. Trends are classified as coincident when the direction of the climate variable trend (positive or negative) aligns with the trend observed in base flow or BFI (@tbl-coincident-trends). This analysis includes both significant and non-significant trends, which is appropriate where the influence of complex, interconnected processes may not always manifest as statistically significant patterns over limited observational periods [@ficklin2016].
+Coincident trends are defined as those in which base flow or BFI trends match in direction with climate variable trends over the same period. Results are summarized in @tbl-coincident-trends. This analysis includes both significant and non-significant trends, which is appropriate where the influence of complex, interconnected processes may not always manifest as statistically significant patterns over limited observational periods [@ficklin2016]. Coincidence was highest with precipitation (64.88% for base flow; 53.17% for BFI), followed by ETO and then temperature. Temperature trends most often show an inverse relationship—i.e., warming associated with declining BFI and base flow.
+
+Given the variations in the period of record across the instrumented network (see Figure S2), we analyzed trends in base flow and BFI in relation to coincident trends in climate variables. Trends are classified as coincident when the direction of the climate variable trend (positive or negative) aligns with the trend observed in base flow or BFI (@tbl-coincident-trends).
 
 |           | **Climate Variable** | **Coincidence Percentage (%)** |
 |-----------|:--------------------:|:------------------------------:|
@@ -201,16 +206,17 @@ Given the variations in the period of record across the instrumented network (se
 
 : Coincident trends of climate variables (ET~O~, precipitation, temperature) with base flow and BFI trends. {#tbl-coincident-trends}
 
-The analysis shows that base flow and BFI trends most frequently align with precipitation trends (64.88% and 53.17%, respectively), emphasizing precipitation as the primary driver of local groundwater recharge and discharge. Coincidence with ET~O~ (reference evapotranspiration) trends (55.12% for base flow and 44.88% for BFI) suggests that evapotranspiration also plays a significant role, particularly in arid regions where it can reduce recharge or base flow during dry periods. In contrast, temperature trends show lower percentages of coincidence, often opposing base flow and BFI trends. Specifically, positive (negative) temperature trends are frequently associated with negative (positive) base-flow trends (60.98%) and BFI trends (52.68%). These results highlight the complex interplay between climatic variables and hydrological processes. While precipitation exerts the strongest influence on base flow and BFI, evapotranspiration and temperature add further variability in specific environmental contexts.
-
 ## Discussion
+
 ### Model Performance and Implications
 
-The regional model demonstrated strong predictive capability (overall R²=0.764) but showed systematic underprediction (negative pbias). The systematic bias suggests potential limitations in the model or underlying predictor data, particularly in monsoon-dominated and warm-dry climates. The performance differences across climatic and physiographic classifications highlight the need for targeted improvements, such as integrating additional predictors or refining the representation of regional hydrological processes.
+The regional model demonstrated strong predictive capability (overall R²=0.764) but showed systematic underprediction (negative pbias). The systematic bias suggests potential limitations in the model or underlying predictor data, particularly in monsoon-dominated and warm-dry climates. The performance differences across climatic and physiographic classifications highlight the need for targeted improvements, such as integrating additional predictors or refining the representation of regional hydrological processes. <!--# Discuss that we tested 3 models: regional (by phys region), full predictor set, and trimmed set. Trimmed set was the best performing, indicating that the regional separation isn't as beneficial as a more robust predictor dataset --> In the development of the final XGBoost model, we tested making two regional models (one for each physiographic region) to ensure best predictions. We found that the state-wide model outperformed the regional model, indicating that regional separation isn't as beneficial as a larger, state-wide dataset.
 
 ### Interpretation of Predictor Variables
 
-Elevation emerged as a critical predictor, reinforcing its effectiveness as a proxy for climate conditions influencing groundwater recharge. The mixed influences of Soil Type A may indicate complexities in how infiltration processes are represented in the model or variability in hydrologic conditions within similar soil classes. Future research could benefit from explicit inclusion of temporal variables such as snowpack duration, soil moisture storage, and finer-scale land cover attributes.
+Elevation was found to be a critical predictor, reinforcing its effectiveness as a proxy for climate conditions influencing groundwater recharge. This finding agrees with previous studies across varied landscapes and scales. @singh2018 indicated that mean basin elevation was the most imporant predictor in their random forest model predicting BFI nationally in New Zealand. @santhi2008 found that relief (basin max elevation minus minimum elevation) was a key parameter in the best fit of their stepwise regression across hydrologic landscape regions in the conterminous US. @beck2013 indicated that basin elevation was the 3rd most important predictor of their artificial neural network in predicting BFI globally.
+
+The mixed influences of Soil Type A may indicate complexities in how infiltration processes are represented in the model or variability in hydrologic conditions within similar soil classes. Future research could benefit from explicit inclusion of temporal variables such as snowpack duration, soil moisture storage, and finer-scale land cover attributes.
 
 ### Spatial Patterns of BFI
 
@@ -219,3 +225,14 @@ The spatial distribution of predicted and observed BFI reflects known hydrogeolo
 ### Trends and Climate Implications
 
 The prevalence of negative BFI trends, especially in warm-dry and low-slope regions, suggests that climate warming and reduced precipitation could disproportionately impact baseflow. The relatively weaker alignment of temperature trends with BFI suggests that temperature impacts are mediated through complex processes, potentially offset by concurrent precipitation or land-use changes. This complexity emphasizes the importance of integrated climate and land-management strategies to sustain groundwater-dependent ecosystems.
+
+## Conclusions
+
+-   The long-term average BFI across Arizona is \~0.32, with strong spatial variability tied to hydrogeology and climate.
+-   The XGBoost model predicts BFI well (R² = 0.764), using elevation, land cover, and soil type as key predictors.
+-   High BFI regions include the Grand Canyon and Mogollon Rim; low BFI areas include the Defiance Plateau and southern Arizona.
+-   Decreasing BFI trends are more prevalent than increasing ones, especially in monsoon-dominated, warm-dry, and low-slope regions.
+-   Precipitation is the dominant driver of BFI and base-flow variability, while ETO and temperature trends add complexity.
+-   The streamgage network in Arizona has limitations for base-flow monitoring; future design should include low-flow-capable instrumentation.
+-   This study demonstrates how machine learning and observational data can be integrated to improve base-flow estimates in data-scarce environments.
+-   The modeling framework is applicable to other dryland regions globally and can inform strategies for climate adaptation and water resource management.
