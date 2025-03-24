@@ -2,7 +2,7 @@ project:
   type: manuscript
 
 manuscript:
-  article: MANUSCRIPT.qmd
+  article: elsevier_MANUSCRIPT.qmd
 
 execute:
   freeze: auto
@@ -10,6 +10,14 @@ execute:
 notebook-links: false
 
 format:
+  elsevier-pdf:
+    keep-tex: true
+    journal:
+      name: Journal of Hydrology
+      formatting: preprint
+      model: 1p
+      layout: onecolumn
+      cite-style: number
   html:
     toc: true
   docx:
@@ -18,7 +26,7 @@ format:
     default: true
   jats: 
     default: true
-
+    
 crossref:
   custom:
     - kind: float
