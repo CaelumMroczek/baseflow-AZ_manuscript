@@ -17,7 +17,7 @@ format:
       formatting: preprint
       model: 1p
       layout: onecolumn
-      cite-style: number
+      cite-style: authoryear
   html:
     toc: true
   docx:
