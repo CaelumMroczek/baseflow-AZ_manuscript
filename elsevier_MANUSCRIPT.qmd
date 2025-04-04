@@ -97,7 +97,7 @@ The study area represents a range of heterogeneous climate, elevation,
 
 The state of Arizona, located in the southwest United States, covers a total area of 295,253 km$^2$. Arizona is divided into two primary physiographic provinces: the Colorado Plateau in the northeast, and the Basin-and-Range region in the west and south. The Central Highlands is a transition zone consisting of scattered basins separated by the mountainous foothills of the Mogollon Rim. The Colorado Plateau is dominated by high-elevation desert with an average elevation of 1,936 masl (6,352 ft). Mean temperatures range from -6$^\circ$C (20$^\circ$F) to 26$^\circ$C (80$^\circ$F) and it averages 580 mm (23 in) of precipitation. The Basin-and-Range region has a semi-arid to arid climate with an average elevation of 490 masl (1600 ft). Average temperature ranges from 15$^\circ$C (60$^\circ$F) to 43$^\circ$C (110$^\circ$F) and the region averages 200 mm (8 in) of precipitation annually [@az_climate2024].
 
-![Map of Arizona and US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown.](images/StudyArea_20241203.png){#fig-study-area}
+![Map of Arizona and US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown.](images/updated/StudyArea_20250404.png){#fig-study-area}
 
 Arizona's hydrology varies seasonally and spatially between its physiographic regions. In the summer, localized and intense convective precipitation events are driven by the North American Monsoon, while in the winter, orographic precipitation comes from Pacific frontal systems [@eastoe2019mtnblock]. While monsoonal precipitation can account for up to 50% of annual precipitation, evaporation and dry preceding soil properties leads to most precipitation becoming runoff [@sheppard2002]. As such, 94% of streams in Arizona are ephemeral or intermittent [@epa_AZephemeral]. Much of the hydrology of Arizona is snow-melt derived, driven by spring melt from the high-elevation Colorado Plateau winter snowpack. While winter precipitation provides only 30% of annual averages, it provides the majority of water for natural reservoirs [@sheppard2002].
 
@@ -181,7 +181,7 @@ The long-term BFI for the 205 gauged reaches across Arizona is illustrated in @f
 
 The stream reaches of the Little Colorado River Basin (northeastern Arizona) indicate consistently low BFI values (\< 0.2). This is likely due to low-yielding perched aquifers underlying the Defiance Plateau in northeastern Arizona, which are hydrologically connected to surface streams, while the high-yield, confined regional aquifer is much deeper [@blanchard02].
 
-![Long-term BFI for the period of record from instrumented stream flow data.](images/BFI_Instrumented_20241203.png){#fig-instrumented-bfi}
+![Long-term BFI for the period of record from instrumented stream flow data.](images/updated/BFI_Instrumented_20240404.png){#fig-instrumented-bfi}
 
 #### Trends in Base Flow and BFI {#sec-bfi-trends}
 
@@ -189,7 +189,7 @@ Trends in BFI over the period of record for each streamgage are illustrated in @
 
 @fig-instrumented-trend illustrates the spatial variation in BFI trends across the study area. Statistically significant decreasing trends are observed at 16.1% of sites, while increasing trends are found at 8.8% of sites. No consistent regional patterns are evident.
 
-![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.](images/BFITrends_20241203.png){#fig-instrumented-trend}
+![Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.](images/updated/BFITrends_20250404.png){#fig-instrumented-trend}
 
 #### Classification Trends
 
@@ -266,7 +266,7 @@ Land cover and land use predictors also play a significant role in BFI estimatio
 
 The regionalized (HUC-8) long-term BFI (1991–2020) is shown in @fig-bfi-huc. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Plateau in northeastern Arizona and the arid southern regions of the state.
 
-![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/BFI_HUC8_20250129.png){#fig-bfi-huc}
+![Predicted long-term BFI values for 8-digit HUC (1991-2020)](images/updated/BFI_HUC8_20250404.png){#fig-bfi-huc}
 
 ## Discussion
 
