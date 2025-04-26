@@ -171,7 +171,7 @@ The ten most important features [@fig-shap_values] were selected based on their 
 
 Statistical analyses were conducted on annual BFI and base-flow values from instrumented streamgages to identify temporal trends using the Mann-Kendall nonparametric trend test [@kendall1970; @mann1945nonparametric]. This test detects monotonic trends in datasets that are non-parametric and assumes the absence of autocorrelation among observations. This test is widely used in studies of this nature [@ficklin2016; @ayers2019; @woodhouse_udall22].
 
-To check for autocorrelation, we applied the Durbin-Watson test [@durbin1950testing], which revealed significant autocorrelation at four streamgages on an annual basis. Of these, only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) showed a significant trend in BFI. This streamgage was excluded from the trend analysis, as autocorrelation could inflate the variance of the Mann-Kendall statistic, potentially leading to biased trend estimates [@MK_Hamed1998]. Trends with a $\rho \le 0.05$ are considered significant.
+To check for autocorrelation, we applied the Durbin-Watson test [@durbin1950testing], which revealed significant autocorrelation at four streamgages on an annual basis. Of these, only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) showed a significant trend in BFI. This streamgage was excluded from the trend analysis, as autocorrelation could inflate the variance of the Mann-Kendall statistic, potentially leading to biased trend estimates [@MK_Hamed1998]. Trends with a $\alpha \le 0.05$ are considered significant.
 
 ## Results
 
