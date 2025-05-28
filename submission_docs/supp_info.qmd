@@ -1,0 +1,52 @@
+---
+title: "supp_info"
+format: docx
+---
+
+| Variable | Source | Sub Variables | Unit | Geoprocessing |
+|----------------|------------|----------------------|------------|------------|
+| Precipitation | PRISM |  | mm | Basin average |
+| Temperature | PRISM |  | C | Basin average |
+| Reference Evapotranspiration | MODIS |  | mm | Basin average |
+| Elevation | DEM |  | m | Basin average |
+| Area | DEM |  | km\^2 | Basin average |
+| Slope | DEM |  | degrees | Basin average |
+| Aspect | DEM | Flat | \% | Percent areal coverage |
+|  |  | North | \% | Percent areal coverage |
+|  |  | South | \% | Percent areal coverage |
+| Land Cover | NLCD | Open Water | \% | Percent areal coverage |
+|  |  | Developed - Open Space | \% | Percent areal coverage |
+|  |  | Developed - High Intensity | \% | Percent areal coverage |
+|  |  | Developed - Medium Intensity | \% | Percent areal coverage |
+|  |  | Developed - Low Intensity | \% | Percent areal coverage |
+|  |  | Barren Land | \% | Percent areal coverage |
+|  |  | Deciduous Forest | \% | Percent areal coverage |
+|  |  | Evergreen Forest | \% | Percent areal coverage |
+|  |  | Mixed Forest | \% | Percent areal coverage |
+|  |  | Shrub | \% | Percent areal coverage |
+|  |  | Herbaceous | \% | Percent areal coverage |
+|  |  | Hay Pasture | \% | Percent areal coverage |
+|  |  | Cultivated Crops | \% | Percent areal coverage |
+|  |  | Woody Wetlands | \% | Percent areal coverage |
+|  |  | Emergent Herbaceous Wetlands | \% | Percent areal coverage |
+| Hydrologic Soil Group | SSURGO | Group A | \% | Percent areal coverage |
+|  |  | Group B | \% | Percent areal coverage |
+|  |  | Group C | \% | Percent areal coverage |
+|  |  | Group D | \% | Percent areal coverage |
+|  |  | Group A/D | \% | Percent areal coverage |
+|  |  | Group B/D | \% | Percent areal coverage |
+|  |  | Group C/D | \% | Percent areal coverage |
+| Underlying Geology | USGS | Igneous Intrusive | \% | Percent areal coverage |
+|  |  | Sedimentary Clastic | \% | Percent areal coverage |
+|  |  | Metamorphic & Sedimentary Undifferentiated | \% | Percent areal coverage |
+|  |  | Igneous & Sedimentary Undifferentiated | \% | Percent areal coverage |
+|  |  | Metamorphic Schist | \% | Percent areal coverage |
+|  |  | Sedimentary Undifferentiated | \% | Percent areal coverage |
+|  |  | Igneous Volcanic | \% | Percent areal coverage |
+|  |  | Metamorphic Undifferentiated | \% | Percent areal coverage |
+|  |  | Unconsolidated Undifferentiated | \% | Percent areal coverage |
+|  |  | Igneous Undifferentiated | \% | Percent areal coverage |
+|  |  | Metamorphic Gneiss | \% | Percent areal coverage |
+|  |  | Metamorphic Volcanic | \% | Percent areal coverage |
+|  |  | Metamorphic Sedimentary Clastic | \% | Percent areal coverage |
+| Karst | USGS |  | \% | Percent areal coverage |
