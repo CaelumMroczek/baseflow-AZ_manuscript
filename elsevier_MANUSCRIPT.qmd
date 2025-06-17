@@ -155,7 +155,7 @@ We tested multiple model configurations, including versions with the full predic
 
 The model dataset was evaluated using 10-fold cross-validation, ensuring robust performance estimates and guarding against overfitting [@fig-k-fold] . In each iteration (fold), the model was trained on 90% of the data and validated on the remaining 10%, with folds being rotated until all of the data had been used for validation in separate models. Root mean squared error (RMSE) was used as the primary performance metric. Model performance on unseen data was strong, with an overall R² of 0.764.
 
-To contextualize model accuracy, we compared XGBoost to two baseline methods: a simple linear regression and an inverse distance weighting (IDW) interpolation. XGBoost reduced RMSE by 43% relative to the linear model and 30% relative to IDW, while improving NSE from 0.25 (linear) and 0.45 (IDW) to 0.75, indicating substantially stronger predictive accuracy and spatial generalization. 
+To contextualize model accuracy, we compared XGBoost to two baseline methods: a simple linear regression and an inverse distance weighting (IDW) interpolation. XGBoost reduced RMSE by 43% relative to the linear model and 30% relative to IDW, while improving NSE from 0.25 (linear) and 0.45 (IDW) to 0.75, indicating substantially stronger predictive accuracy and spatial generalization.
 
 ![Schematic of \$k\$-fold cross validation. The dataset is randomly divided into \$k\$ stratified folds. Each fold serves as the validation set once, while the remaining folds are combined to create a training set for model development. Performance metrics for the test set are calculated and recorded, and this process is repeated for all \$k\$ folds.](images/k-fold_fig.png){#fig-k-fold fig-align="center" width="100%"}
 
@@ -192,7 +192,7 @@ Classifications presented in @tbl-trends were determined based on precipitation 
 Statistically significant decreasing trends in long-term BFI were more common than increasing trends across all site classifications (@tbl-trends). While decreasing trends dominate, both increasing and decreasing trends are observed within each classification. Monsoon-dominated regions exhibit a higher proportion of significant negative trends (24.1%) compared to snowmelt-dominated regions (10.2%), suggesting that monsoon-dominated systems are more consistently correlated with declining long-term BFI. Among climate classifications, warm-dry climates have the highest proportion of negative trends (20.0%), followed by warm-wet climates (19.4%), indicating that regions with higher temperatures are more prone to BFI declines. Low-slope regions show a greater prevalence of negative trends (20.4%) compared to high-slope regions (11.8%). This suggests that flatter areas may be more susceptible to base-flow reductions, potentially due to differences in hydrologic connectivity and recharge dynamics. Negative trends in low-slope regions may also be a result of reductions in water table height, assumed to follow topography, leading to a change in flow direction.
 
 | **Classification Group** | **n** | **n_pos** | **n_neg** | **perc_pos** | **perc_neg** |
-|------------|------------|------------|------------|------------|------------|
+|----|----|----|----|----|----|
 | Precipitation - Monsoon Dominated | 87 | 8 | 21 | 0.092 | 0.241 |
 | Precipitation - Snowmelt Dominated | 118 | 9 | 12 | 0.076 | 0.102 |
 | Physiographic Region - Basin and Range | 156 | 14 | 26 | 0.090 | 0.167 |
@@ -231,7 +231,7 @@ Model performance metrics across various classifications are summarized in @tbl-
 ![Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed, green line is regressed to the data.](images/actual-predicted.png){#fig-actual_predicted}
 
 | **Classification Group** | **n** | **R2** | **MSE** | **RMSE** | **MAE** | **NSE** | **pbias** |
-|-------------------------|-------|-------|-------|-------|-------|-------|-------|
+|----|----|----|----|----|----|----|----|
 | Full Dataset | 7724 | 0.764 | 0.015 | 0.122 | 0.081 | 0.752 | -5.6 |
 | linear model | 7724 | 0.248 | 0.046 | 0.214 | 0.173 | 0.247 | \~ 0 |
 | Inverse Distance Weighted (LOO CV) | 7724 | 0.449 | 0.029 | 0.170 | 0.131 | 0.448 | 1.86 |
