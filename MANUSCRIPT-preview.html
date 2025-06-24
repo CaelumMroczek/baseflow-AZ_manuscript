@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.7.32">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <meta name="author" content="Caelum Mroczek">
+    <meta name="author" content="Abraham Springer">
+    <meta name="author" content="Neha Gupta">
+    <meta name="author" content="Temuulen Sankey">
+    <meta name="author" content="Benjamin Lucas">
+    <meta name="dcterms.date" content="2025-06-24">
+    <meta name="keywords" content="Base Flow, Base-flow Index, Regionalization, Machine Learning">
+
+    <title>Regional Base-Flow Index in Arid Landscapes Using Machine Learning and Instrumented Records</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for citations */
+      div.csl-bib-body { }
+      div.csl-entry {
+        clear: both;
+        margin-bottom: 0em;
+      }
+      .hanging-indent div.csl-entry {
+        margin-left:2em;
+        text-indent:-2em;
+      }
+      div.csl-left-margin {
+        min-width:2em;
+        float:left;
+      }
+      div.csl-right-inline {
+        margin-left:2em;
+        padding-left:1em;
+      }
+      div.csl-indent {
+        margin-left: 2em;
+      }    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = "index.html";
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="site_libs/manuscript-notebook/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-99969c2a6860b2f92ec7db965b88c7f5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script> 
+      </head>
+
+  <body class="quarto-notebook quarto-light">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Regional Base-Flow Index in Arid Landscapes Using Machine Learning and Instrumented Records</h6>
+
+            <a href="./MANUSCRIPT.qmd" class="btn btn-primary quarto-download-embed" download="MANUSCRIPT.qmd">Download Source</a>
+          </div>
+
+     <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Regional Base-Flow Index in Arid Landscapes Using Machine Learning and Instrumented Records</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+            <div class="quarto-title-meta-author">
+          <div class="quarto-title-meta-heading">Authors</div>
+          <div class="quarto-title-meta-heading">Affiliations</div>
+          
+                <div class="quarto-title-meta-contents">
+            <p class="author">Caelum Mroczek <a href="mailto:csm428@nau.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0009-0005-6695-0134" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Abraham Springer <a href="https://orcid.org/0000-0003-4826-9124" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        School of Earth and Sustainability, Northern Arizona University, Flagstaff, AZ, USA
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Neha Gupta <a href="https://orcid.org/0000-0002-2247-3509" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Department of Hydrology and Atmospheric Sciences, University of Arizona, Tucson, AZ, USA
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Temuulen Sankey <a href="https://orcid.org/0000-0002-6919-8428" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        School of Informatics, Computing, and Cyber Systems, Northern Arizona University, Flagstaff, AZ, US
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Benjamin Lucas <a href="https://orcid.org/0000-0002-2021-3076" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Department of Mathematics and Statistics, Northern Arizona University, Flagstaff, AZ, USA
+                      </p>
+                  </div>
+                    </div>
+        
+        <div class="quarto-title-meta">
+
+                      
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">June 24, 2025</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        <p>Base flow, sustained by groundwater discharge, is a vital component of river ecosystems, particularly in drylands, where water resources are limited. This study analyzes the instrumented streamflow record in Arizona to assess long-term base-flow index (BFI) trends across gauged catchments. Results indicate that approximately 32% of Arizona’s streamflow originates from groundwater discharge, with significant spatial variability driven by landscape and climatic factors. Base flow relationships are analyzed with coincident trends in climate variables such as precipitation, evapotranspiration, and temperature. Spatial and climatic trends reveal variability in base-flow contributions, providing insight into groundwater-surface water interactions in arid and semi-arid landscapes. Building on this analysis, we applied machine learning methods to predict BFI in ungauged basins, addressing the challenges of Arizona’s sparse streamgage network. Using the eXtreme Gradient Boosting (XGBoost) algorithm trained on hydroclimate and physiographic predictors, we estimated long-term BFI from 1991 to 2020. This combined approach integrates observational data with predictive modeling to enhance our understanding of base-flow processes and provide a framework for water resource management in data-limited regions.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>Base Flow, Base-flow Index, Regionalization, Machine Learning</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-intro" id="toc-sec-intro" class="nav-link active" data-scroll-target="#sec-intro">Introduction</a></li>
+  <li><a href="#sec-data-methods" id="toc-sec-data-methods" class="nav-link" data-scroll-target="#sec-data-methods">Data &amp; Methods</a>
+  <ul class="collapse">
+  <li><a href="#sec-study-area" id="toc-sec-study-area" class="nav-link" data-scroll-target="#sec-study-area">Study Area</a></li>
+  <li><a href="#sec-data" id="toc-sec-data" class="nav-link" data-scroll-target="#sec-data">Data</a></li>
+  <li><a href="#sec-bf_sep" id="toc-sec-bf_sep" class="nav-link" data-scroll-target="#sec-bf_sep">Base-flow separation</a></li>
+  <li><a href="#machine-learning" id="toc-machine-learning" class="nav-link" data-scroll-target="#machine-learning">Machine Learning</a></li>
+  <li><a href="#statistical-analyses" id="toc-statistical-analyses" class="nav-link" data-scroll-target="#statistical-analyses">Statistical Analyses</a></li>
+  </ul></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#bfi-of-ungauged-catchments" id="toc-bfi-of-ungauged-catchments" class="nav-link" data-scroll-target="#bfi-of-ungauged-catchments">BFI of Ungauged Catchments</a></li>
+  <li><a href="#bfi-of-gauged-catchments" id="toc-bfi-of-gauged-catchments" class="nav-link" data-scroll-target="#bfi-of-gauged-catchments">BFI of Gauged Catchments</a></li>
+  </ul></li>
+  <li><a href="#sec-conclusion" id="toc-sec-conclusion" class="nav-link" data-scroll-target="#sec-conclusion">Summary &amp; Conclusions</a></li>
+  <li><a href="#open-research" id="toc-open-research" class="nav-link" data-scroll-target="#open-research">Open Research</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">      
+
+       <section id="sec-intro" class="level2">
+<h2 class="anchored" data-anchor-id="sec-intro">Introduction</h2>
+<p>Dryland regions, encompassing arid, semi-arid, hyper-arid, and dry sub-humid systems, account for 40% of the Earth’s land surface. These regions are home to approximately 2 billion people globally and constitute the largest terrestrial biome <span class="citation" data-cites="iucn-drylands-2019">(<a href="#ref-iucn-drylands-2019" role="doc-biblioref">IUCN 2019</a>)</span>. Despite supporting diverse ecosystems and human populations, dryland regions face mounting hydrologic challenges exacerbated by increasing urbanization, expanding agricultural activities, and climate-induced amplification of precipitation patterns <span class="citation" data-cites="taylor2013">(<a href="#ref-taylor2013" role="doc-biblioref">Taylor et al. 2013</a>)</span>. This water scarcity is intensifying due to the compounding effects of climate variability and increased groundwater extraction <span class="citation" data-cites="taylor2013">(<a href="#ref-taylor2013" role="doc-biblioref">Taylor et al. 2013</a>)</span>. In drylands, groundwater serves as a vital resource for sustaining ecosystems and meeting human needs <span class="citation" data-cites="scanlon2006 yao2018">(<a href="#ref-scanlon2006" role="doc-biblioref">Scanlon et al. 2006</a>; <a href="#ref-yao2018" role="doc-biblioref">Yao et al. 2018</a>)</span>.</p>
+<p>Base flow is the sustained portion of streamflow in the absence of runoff that is derived from groundwater discharge <span class="citation" data-cites="usgs-glossary-2018">(<a href="#ref-usgs-glossary-2018" role="doc-biblioref">USGS 2018</a>)</span>. Base flow is critical to maintaining seasonal low-flow regimes, supporting aquatic ecosystems, and facilitating the transport of nutrients and chemicals. Base-flow contribution to streamflow can be highly variable spatially <span class="citation" data-cites="singh2018 bosch2017 beck2013">(<a href="#ref-singh2018" role="doc-biblioref">Singh et al. 2018</a>; <a href="#ref-bosch2017" role="doc-biblioref">Bosch et al. 2017</a>; <a href="#ref-beck2013" role="doc-biblioref">Beck et al. 2013</a>)</span>, and temporally <span class="citation" data-cites="ficklin2016 tan2020">(<a href="#ref-ficklin2016" role="doc-biblioref">Ficklin et al. 2016</a>; <a href="#ref-tan2020" role="doc-biblioref">Tan et al. 2020</a>)</span>. Increasing groundwater extraction, changes in land cover/land use, and changes in precipitation patterns due to climate change affect the timing and volumes of base flow <span class="citation" data-cites="tan2020 taylor2013">(<a href="#ref-tan2020" role="doc-biblioref">Tan et al. 2020</a>; <a href="#ref-taylor2013" role="doc-biblioref">Taylor et al. 2013</a>)</span>. Effective management of water quantity and quality depends on understanding seasonal and interannual base-flow patterns and long-term changes in base-flow behavior.</p>
+<p>The Base-Flow Index (BFI) is the ratio of the long-term mean base-flow volume to the long-term total streamflow volume expressed as a percentage. BFI serves as a normalized measure of groundwater contribution interannually or between basins. BFI is determined by hydrograph separation and is influenced by the climate and physiographic characteristics of a catchment <span class="citation" data-cites="neff2005 beck2013 singh2018">(<a href="#ref-neff2005" role="doc-biblioref">Neff et al. 2005</a>; <a href="#ref-beck2013" role="doc-biblioref">Beck et al. 2013</a>; <a href="#ref-singh2018" role="doc-biblioref">Singh et al. 2018</a>)</span>. Between catchments, base flow fluctuates according to changes in the moisture content of the vadose zone, influenced by varying levels of evapotranspiration and aquifer storage dynamics <span class="citation" data-cites="bosch2017">(<a href="#ref-bosch2017" role="doc-biblioref">Bosch et al. 2017</a>)</span>. Since BFI calculations rely on instrumented stream records, it remains unknown for ungauged catchments, which encompass most of the earth’s land surface <span class="citation" data-cites="fekete2007">(<a href="#ref-fekete2007" role="doc-biblioref">Fekete et al. 2007</a>)</span>. Addressing this information gap is integral to approaching a comprehensive understanding of groundwater dynamics globally.</p>
+<p>Advancements in machine learning provide tools to predict hydrologic indices in ungauged basins, addressing the limitations of sparse streamgage networks. To tackle the challenge of quantifying base flow in ungauged catchments, numerous studies have applied both regression and machine learning methods. <span class="citation" data-cites="ahiablame2013">Ahiablame et al. (<a href="#ref-ahiablame2013" role="doc-biblioref">2013</a>)</span> found that using a regression model to estimate annual base flow of ungauged catchments was reasonably easy and accurate. <span class="citation" data-cites="beck2013">Beck et al. (<a href="#ref-beck2013" role="doc-biblioref">2013</a>)</span> overcame the nonlinearity of basin characteristics and improved results of multivariate analyses by using artificial neural networks to estimate BFI globally. <span class="citation" data-cites="singh2018">Singh et al. (<a href="#ref-singh2018" role="doc-biblioref">2018</a>)</span> implemented a random forest algorithm to predict long-term BFI for ungauged catchments across New Zealand. These applications demonstrate the versatility and effectiveness of machine learning in capturing complex ecohydrologic dynamics and improving our understanding of groundwater contributions to streamflow.</p>
+<p>This study develops a technique for estimating BFI in ungauged basins across Arizona and evaluates the state’s long-term BFI. Regional trends in base flow and BFI at instrumented sites are also analyzed, with these trends being linked to coincident trends in precipitation, reference evapotranspiration (ET<sub>O</sub>), and temperature over the same periods. Using a machine learning model trained on the hydrogeologic characteristics of surface water basins, we estimate the mean BFI for ungauged basins from 1991 to 2020. This approach helps address the spatial gaps in the streamgage network, which is relatively sparse across the state. The results offer novel insights into low-flow processes in both gauged and ungauged basins, enhancing our understanding of climate controls on consistent flows in Arizona. This study contributes to a more comprehensive view of hydrological dynamics in the context of arid and semi-arid landscapes.</p>
+</section>
+<section id="sec-data-methods" class="level2">
+<h2 class="anchored" data-anchor-id="sec-data-methods">Data &amp; Methods</h2>
+<section id="sec-study-area" class="level3">
+<h3 class="anchored" data-anchor-id="sec-study-area">Study Area</h3>
+<p>The state of Arizona, located in the southwest United States, covers a total area of 295,253 km<span class="math inline">\(^2\)</span>. Arizona is divided into two primary physiographic provinces: the Colorado Plateau in the northeast, and the Basin-and-Range region in the west and south. The Central Highlands is a transition zone consisting of scattered basins separated by the mountainous foothills of the Mogollon Rim. The Colorado Plateau is dominated by high-elevation desert with an average elevation of 1,936 masl (6,352 ft). Mean temperatures range from -6<span class="math inline">\(^\circ\)</span>C (20<span class="math inline">\(^\circ\)</span>F) to 26<span class="math inline">\(^\circ\)</span>C (80<span class="math inline">\(^\circ\)</span>F) and it averages 580 mm (23 in) of precipitation. The Basin-and-Range region has a semi-arid to arid climate with an average elevation of 490 masl (1600 ft). Average temperature ranges from 15<span class="math inline">\(^\circ\)</span>C (60<span class="math inline">\(^\circ\)</span>F) to 43<span class="math inline">\(^\circ\)</span>C (110<span class="math inline">\(^\circ\)</span>F) and the region averages 200 mm (8 in) of precipitation annually <span class="citation" data-cites="az_climate2024">(<a href="#ref-az_climate2024" role="doc-biblioref">Arizona State Climate Office 2024</a>)</span>.</p>
+<div id="fig-study-area" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-study-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/StudyArea_20241203.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Map of Arizona and US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown."><img src="images/StudyArea_20241203.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-study-area-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Map of Arizona and US Geological Survey (USGS) streamgages used in this study. 8-digit HUC subbasin boundaries and physiographic regions shown.
+</figcaption>
+</figure>
+</div>
+<p>Arizona’s hydrology varies seasonally and spatially between its physiographic regions. In the summer, localized and intense convective precipitation events are driven by the North American Monsoon, while in the winter, orographic precipitation comes from Pacific frontal systems <span class="citation" data-cites="eastoe2019mtnblock">(<a href="#ref-eastoe2019mtnblock" role="doc-biblioref">Eastoe et al. 2019</a>)</span>. While monsoonal precipitation can account for up to 50% of annual precipitation, evaporation and dry preceding soil properties leads to most precipitation becoming runoff <span class="citation" data-cites="sheppard2002">(<a href="#ref-sheppard2002" role="doc-biblioref">Sheppard et al. 2002</a>)</span>. As such, 94% of streams in Arizona are ephemeral or intermittent <span class="citation" data-cites="epa_AZephemeral">(<a href="#ref-epa_AZephemeral" role="doc-biblioref">Levick et al. 2008</a>)</span>. Much of the hydrology of Arizona is snow-melt derived, driven by spring melt from the high-elevation Colorado Plateau winter snowpack. While winter precipitation provides only 30% of annual averages, it provides the majority of water for natural reservoirs <span class="citation" data-cites="sheppard2002">(<a href="#ref-sheppard2002" role="doc-biblioref">Sheppard et al. 2002</a>)</span>.</p>
+</section>
+<section id="sec-data" class="level3">
+<h3 class="anchored" data-anchor-id="sec-data">Data</h3>
+<p>Daily observed streamflow data obtained from the United States Geological Survey (USGS) National Water Information System (NWIS) were used in this study. Streamgages were selected depending on criteria to ensure the applicability of each site. Following the findings of <span class="citation" data-cites="odonnell2016">O’Donnell et al. (<a href="#ref-odonnell2016" role="doc-biblioref">2016</a>)</span>, which determined that 8–10 years of calibration data are necessary to account for climate variability in paired watershed studies in the region, a minimum record length of 10 years was required. Additionally, years with more than 30 missing days of streamflow data were excluded from the analysis. This study focuses on natural, streamflow-influencing dynamics, so streamgages affected by regulation or diversions were excluded. The regulated river streamgages were identified through annual reports on water data published by the USGS <span class="citation" data-cites="usgs2010">(<a href="#ref-usgs2010" role="doc-biblioref">USGS 2010</a>)</span>. Furthermore, streamgages along the Colorado River were omitted because they represent managed flows governed by the Colorado River Compact. After applying these selection criteria, 205 USGS streamgages with acceptable periods of record were included in the study (<span class="citation" data-cites="fig-study-area">(<a href="#ref-fig-study-area" role="doc-biblioref"><strong>fig-study-area?</strong></a>)</span>). Periods of record ranged from 10 to 112 years, with a median of 28 years.</p>
+<p>While our data selection ensures a robust record for this analysis, it also highlights gaps in spatial coverage that the machine learning model can address. Arizona has 184 active USGS streamflow stations (as of 2024) across an area of 295,253 km², whereas Indiana (a humid state in the U.S.), for example, has 189 active stations within an area of 94,326 km². This translates to a streamgage density of approximately 2.004 gages per 1,000 km² in Indiana, over three times higher than Arizona’s density of 0.623 gages per 1,000 km². This stark difference underscores the relative sparsity of Arizona’s streamgage network, particularly in the context of its larger geographic area and the unique hydrological challenges posed by its arid and semi-arid landscapes.</p>
+<p>Watersheds across the United States are delineated by the USGS using a hydrologically-defined network. This system delineates the country using hierarchical hydrologic unit codes (HUCs), where each subsequent basin includes the digits of the enclosing basin. Here, 8-digit HUCs (HUC 8s) are used to divide Arizona into 84 sub-basins that are fully or partially in the state (<span class="citation" data-cites="fig-study-area">(<a href="#ref-fig-study-area" role="doc-biblioref"><strong>fig-study-area?</strong></a>)</span>). These HUC 8 sub-basins are analogous to medium-sized river basins and are defined by surface water characteristics.</p>
+<p>Annual precipitation and temperature data came from the PRISM climate group at Oregon State University at a resolution of 4 km (<a href="https://prism.oregonstate.edu;" class="uri">https://prism.oregonstate.edu;</a> <span class="citation" data-cites="daly2008">(<a href="#ref-daly2008" role="doc-biblioref">Daly et al. 2008</a>)</span>). The PRISM dataset provides valuable insights into regional climate in ungauged regions and has been shown to perform well across the southwestern US <span class="citation" data-cites="buban_PRISM">(<a href="#ref-buban_PRISM" role="doc-biblioref">Buban et al. 2020</a>)</span>. Instead of the water year, PRISM data uses a calendar-year format, which was adopted for consistency in the water balance. Although this may introduce challenges in the annual estimates due to inter-annual snow storage, the use of long-term annual averages is likely to reduce any potential errors <span class="citation" data-cites="reitz2017">(<a href="#ref-reitz2017" role="doc-biblioref">Reitz et al. 2017</a>)</span>.</p>
+<p>Annual reference evapotranspiration (ET<sub>O</sub>) data came from TerraClimate, a 4-km grid climatological data set <span class="citation" data-cites="abatzoglou2018">(<a href="#ref-abatzoglou2018" role="doc-biblioref">Abatzoglou et al. 2018</a>)</span>. TerraClimate uses a Penman-Monteith approach to generate a reference evapotranspiration. The ET<sub>O</sub> values were calculated assuming a reference grass surface across the landscape with unlimited water. In the drylands of the southwestern US, ET<sub>O</sub> typically exceeds precipitation annually <span class="citation" data-cites="zomer2022">(<a href="#ref-zomer2022" role="doc-biblioref">Zomer et al. 2022</a>)</span>.</p>
+<p>A 30-meter resolution Digital Elevation Model (DEM) of Arizona was used to derive key basin characteristics: basin area, average slope, and the proportion of each basin oriented toward north or south aspects. Various geospatial variables, such as aspect, were disaggregated then averaged to assess the areal percentage of each sub-variable within individual HUC 8 basins. By calculating these percentages, we aimed to get a more comprehensive understanding of landscape composition across space. Land cover was acquired from USGS-NLCD (National Land Cover Database), hydrologic soil group from SSURGO (Soil Survey Geographic Database), and underlying geology and karst from USGS were all similarly averaged across the basins. Aggregating variables to align with the HUC 8 boundaries allowed for more precise predictions of BFI by integrating spatial variations within each basin.</p>
+</section>
+<section id="sec-bf_sep" class="level3">
+<h3 class="anchored" data-anchor-id="sec-bf_sep">Base-flow separation</h3>
+<p>Directly measuring base flow and BFI presents unique challenges <span class="citation" data-cites="eckhardt2008">(<a href="#ref-eckhardt2008" role="doc-biblioref">Eckhardt 2008</a>)</span>. The technique chosen to separate base flow has been shown to affect results, and the choice of base-flow separation method is subjective since ‘true’ BFI values are not known <span class="citation" data-cites="beck2013">(<a href="#ref-beck2013" role="doc-biblioref">Beck et al. 2013</a>)</span>. However, many methods have been developed to estimate these values. These methods include the use of tracers <span class="citation" data-cites="gonzales2009">(<a href="#ref-gonzales2009" role="doc-biblioref">Gonzales et al. 2009</a>)</span>, graphical interpolation <span class="citation" data-cites="instituteofhydrology1980 sloto1996">(<a href="#ref-instituteofhydrology1980" role="doc-biblioref">Hydrology 1980</a>; <a href="#ref-sloto1996" role="doc-biblioref">Sloto et al. 1996</a>)</span>, and digital filters <span class="citation" data-cites="arnold1995 eckhardt2005 lyne1979 nathan1990">(<a href="#ref-arnold1995" role="doc-biblioref">Arnold et al. 1995</a>; <a href="#ref-eckhardt2005" role="doc-biblioref">Eckhardt 2005</a>; <a href="#ref-lyne1979" role="doc-biblioref">Lyne et al. 1979</a>; <a href="#ref-nathan1990" role="doc-biblioref">Nathan et al. 1990</a>)</span>. These techniques have varying levels of applicability depending on the spatial scale, time span, and the scope of the study. Comparisons of various base-flow separation techniques have been made in previous studies <span class="citation" data-cites="eckhardt2005 eckhardt2008 nathan1990">(e.g. <a href="#ref-eckhardt2005" role="doc-biblioref">Eckhardt 2005</a>, <a href="#ref-eckhardt2008" role="doc-biblioref">2008</a>; <a href="#ref-nathan1990" role="doc-biblioref">Nathan et al. 1990</a>)</span>; this study does not explore the superiority of different methods.</p>
+<p>Base flow was calculated using a single-parameter, recursive digital filter technique from <span class="citation" data-cites="nathan1990">Nathan et al. (<a href="#ref-nathan1990" role="doc-biblioref">1990</a>)</span>. This base-flow separation technique is based on a recursive digital filter used in signal analysis that separates high-frequency signals (quickflow) from low-frequency signals (base flow) <span class="citation" data-cites="lyne1979">(<a href="#ref-lyne1979" role="doc-biblioref">Lyne et al. 1979</a>)</span>. <span class="citation" data-cites="eckhardt2023">Eckhardt (<a href="#ref-eckhardt2023" role="doc-biblioref">2023</a>)</span> noted that recursive digital filters lack a physical basis, but as the method is easy to automate, objective, and repeatable, it is appropriate for a regional-scale study. The Lyne-Hollick filter has been used in multiple studies <span class="citation" data-cites="ARNOLD200021 santhi2008 bloomfield2009 singh2018">(<a href="#ref-ARNOLD200021" role="doc-biblioref">Arnold et al. 2000</a>; <a href="#ref-santhi2008" role="doc-biblioref">Santhi et al. 2008</a>; <a href="#ref-bloomfield2009" role="doc-biblioref">Bloomfield et al. 2009</a>; <a href="#ref-singh2018" role="doc-biblioref">Singh et al. 2018</a>)</span>, and it takes the form of</p>
+<p><span class="math display">\[
+b = \alpha b_{k-1} + \frac{1-\alpha}{2}(Q_k + Q_{k-1})
+\]</span> {#eq-bf-separate}</p>
+<p>where <span class="math inline">\(b\)</span> is base flow, <span class="math inline">\(\alpha\)</span> is the filter parameter, <span class="math inline">\(Q\)</span> is the total streamflow, and <span class="math inline">\(k\)</span> is the time step. A filter parameter <span class="math inline">\(\alpha\)</span> of 0.925 was used as in <span class="citation" data-cites="nathan1990">Nathan et al. (<a href="#ref-nathan1990" role="doc-biblioref">1990</a>)</span> and <span class="citation" data-cites="fuka2014ecohydrology">Fuka et al. (<a href="#ref-fuka2014ecohydrology" role="doc-biblioref">2014</a>)</span>. The filter was run three times (forward, backward, forward) to attenuate the base-flow signal.</p>
+</section>
+<section id="machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="machine-learning">Machine Learning</h3>
+<p>The implementation of machine learning models to predict hydrologic indices has been successful in past studies <span class="citation" data-cites="singh2018 schmidt_ML_2020 Rozos2021Machine">(<a href="#ref-singh2018" role="doc-biblioref">Singh et al. 2018</a>; <a href="#ref-schmidt_ML_2020" role="doc-biblioref">Schmidt et al. 2020</a>; <a href="#ref-Rozos2021Machine" role="doc-biblioref">Rozos et al. 2021</a>)</span>. In this work, we used the eXtreme Gradient Boosting (XGBoost) algorithm <span class="citation" data-cites="chen2016xgboost">(<a href="#ref-chen2016xgboost" role="doc-biblioref">Chen et al. 2016</a>)</span> to predict BFI at ungauged locations using catchment characteristics as predictors <span class="citation" data-cites="tbl-predictors">(<a href="#ref-tbl-predictors" role="doc-biblioref"><strong>tbl-predictors?</strong></a>)</span>. The XGBoost algorithm is a decision tree-based ensemble algorithm, which can be adapted for either regression or classification problems. This algorithm iteratively builds an ensemble of decision trees, where each tree corrects errors from previous trees to improve predictions <span class="citation" data-cites="chen2016xgboost">(<a href="#ref-chen2016xgboost" role="doc-biblioref">Chen et al. 2016</a>)</span>. Its efficiency, scalability, and robustness have made it increasingly popular in recent years, with successful applications in environmental modeling tasks such as streamflow forecasting <span class="citation" data-cites="szczepanek2022daily ni2020streamflow">(<a href="#ref-szczepanek2022daily" role="doc-biblioref">Szczepanek 2022</a>; <a href="#ref-ni2020streamflow" role="doc-biblioref">Ni et al. 2020</a>)</span> and land use/land cover classification <span class="citation" data-cites="Georganos2018Very">(<a href="#ref-Georganos2018Very" role="doc-biblioref">Georganos et al. 2018</a>)</span>.</p>
+<p>XGBoost operates by leveraging gradient boosting on decision tree algorithms, combining multiple low-variance models to produce a robust overall prediction. Gradient boosting works iteratively: the initial tree is trained on the target values, while subsequent trees are trained on the residual errors of the preceding tree. Each tree is assigned a weight based on its contribution to reducing error, and these weights are used to determine the influence of each tree in the final model. The ultimate prediction is made by aggregating the outputs of all <span class="math inline">\(n\)</span> weighted trees in the ensemble. In this study, the trained XGBoost model is used to predict BFI in ungauged catchments based on geospatial and hydroclimate predictor variables (<span class="citation" data-cites="tbl-predictors">(<a href="#ref-tbl-predictors" role="doc-biblioref"><strong>tbl-predictors?</strong></a>)</span>). Certain features were further subdivided according to their areal coverage within each basin (e.g.&nbsp;land cover was divided into 16 subdivisions). This approach allowed the model to capture finer-scale spatial variability and improve predictive accuracy.</p>
+<div id="tbl-predictors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-predictors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Basin-characteristic variables used as initial features in XGBoost model. Starred features are maintained in the final, dimensionality-reduced model.
+</figcaption>
+<div aria-describedby="tbl-predictors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th>Variable</th>
+<th>Source</th>
+<th>Geoprocessing</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Hydroclimate</td>
+<td>Precipitation*</td>
+<td>PRISM</td>
+<td>Basin average</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Mean Temperature*</td>
+<td>PRISM</td>
+<td>Basin average</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Reference Evapotranspiration*</td>
+<td>TerraClimate</td>
+<td>Basin average</td>
+</tr>
+<tr class="even">
+<td>Geospatial</td>
+<td>Elevation*</td>
+<td>DEM</td>
+<td>Basin average</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Area</td>
+<td>DEM</td>
+<td>Basin average</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Slope</td>
+<td>DEM</td>
+<td>Basin average</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Aspect</td>
+<td>DEM</td>
+<td>Percent areal coverage</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Land Cover*</td>
+<td>NLCD</td>
+<td>Percent areal coverage</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Hydrologic Soil Group*</td>
+<td>SSURGO</td>
+<td>Percent areal coverage</td>
+</tr>
+<tr class="even">
+<td></td>
+<td>Geology</td>
+<td>USGS</td>
+<td>Percent areal coverage</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td>Karst</td>
+<td>USGS</td>
+<td>Percent areal coverage</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Our initial training dataset comprised 7,724 observations across 45 variables. To optimize the model’s performance, we first conducted an exhaustive grid search combined with 5-fold cross-validation to identify the optimal hyperparameter values. The hyperparameters evaluated included the learning rate (<span class="math inline">\(\eta\)</span>), minimum split loss (<span class="math inline">\(\gamma\)</span>), maximum tree depth, minimum child weight, and the number of trees. While not an exhaustive list of all possible XGBoost hyperparameters, the range of values explored provided sufficient variation to ensure the selection of a high-performing model. The optimal hyperparameters were determined to be: 700 trees, a learning rate (<span class="math inline">\(\eta\)</span>) of 0.05, a minimum split loss (<span class="math inline">\(\gamma\)</span>) of 0.075, a maximum tree depth of 7, and a minimum child weight of 5. Using these values, the XGBoost model was trained on the dataset with 10-fold cross-validation.</p>
+<p><span class="math inline">\(K\)</span>-fold cross-validation provides an unbiased estimate of a model’s accuracy on unseen data, while also insuring against overfitting or underfitting. In this approach, the data are randomly divided into <span class="math inline">\(k\)</span> folds of equal size. The model is trained on <span class="math inline">\(k-1\)</span> folds and tested on the remaining fold, referred to as the validation set. This process is repeated <span class="math inline">\(k\)</span> times, with each fold serving as the validation set exactly once. Each iteration trains an independent model with the same hyperparameters but using a different subset of training data. By averaging the model performance across all <span class="math inline">\(k\)</span> folds, we achieve a robust and reliable estimate of predictive accuracy. Root mean squared error (RMSE) was used as the performance metric for both model optimization and evaluation. RMSE provided a consistent and interpretable measure of the model’s accuracy throughout the training and validation process.</p>
+<div id="fig-k-fold" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-k-fold-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/k-fold_fig.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Schematic of k-fold cross validation. The dataset is randomly divided into k stratified folds. Each fold serves as the validation set once, while the remaining folds are combined to create a training set for model development. Performance metrics for the test set are calculated and recorded, and this process is repeated for all k folds."><img src="images/k-fold_fig.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-k-fold-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Schematic of <span class="math inline">\(k\)</span>-fold cross validation. The dataset is randomly divided into <span class="math inline">\(k\)</span> stratified folds. Each fold serves as the validation set once, while the remaining folds are combined to create a training set for model development. Performance metrics for the test set are calculated and recorded, and this process is repeated for all <span class="math inline">\(k\)</span> folds.
+</figcaption>
+</figure>
+</div>
+<section id="feature-selection" class="level4">
+<h4 class="anchored" data-anchor-id="feature-selection">Feature Selection</h4>
+<p>Machine learning models are prone to overfitting, especially when provided with a large set of predictive features <span class="citation" data-cites="Ying_2019">(<a href="#ref-Ying_2019" role="doc-biblioref">Ying 2019</a>)</span>. Overfitting can degrade model performance on unseen data and increase the demand for computational resources and memory storage <span class="citation" data-cites="feat_selec2017">(<a href="#ref-feat_selec2017" role="doc-biblioref">Li et al. 2017</a>)</span>. Dimensionality reduction offers a robust solution to these challenges and generally falls into two broad categories: feature extraction and feature selection.</p>
+<p>Feature extraction involves transforming the original dataset into a lower-dimensional feature space. However, this process generates new features that often lack the physical interpretability of the original variables. In contrast, feature selection identifies a subset of the original features, preserving their physical meaning while improving model readability and interpretability <span class="citation" data-cites="feat_selec2017">(<a href="#ref-feat_selec2017" role="doc-biblioref">Li et al. 2017</a>)</span>. In this study, supervised feature selection was employed to reduce the number of predictors, which enhanced learning performance, reduced computational costs, and mitigated overfitting.</p>
+<p>To begin, an initial model was trained using the full feature set of 45 predictors (<span class="citation" data-cites="tbl-predictors">(<a href="#ref-tbl-predictors" role="doc-biblioref"><strong>tbl-predictors?</strong></a>)</span>). A feature selection method based on feature importance was then applied to identify and remove less relevant and noisy features. Feature importance scores quantify the contribution of individual features—either positively or negatively—to the model’s predictions <span class="citation" data-cites="ML_interpretability2019">(<a href="#ref-ML_interpretability2019" role="doc-biblioref">Murdoch et al. 2019</a>)</span>. In this analysis, SHAP (SHapley Additive exPlanations) values were used to compute feature importance scores <span class="citation" data-cites="SHAP_values">(<a href="#ref-SHAP_values" role="doc-biblioref">Lundberg and Lee 2017</a>)</span>.</p>
+<p>SHAP values is a method to explain the prediction of an individual instance by calculating the contribution of each feature to that prediction. The method is based on coalition game theory and is discussed further in <span class="citation" data-cites="SHAP_values">Lundberg and Lee (<a href="#ref-SHAP_values" role="doc-biblioref">2017</a>)</span>. Here, SHAP values are used for global interpretation of feature importance and feature effects on the model. Global feature importance is produced by the absolute Shapley values of each feature across the dataset, providing a list of features in order of most to least important. Feature effects provide an indication of the relationship between the value of a predicting feature and its impact on the prediction.</p>
+<p>The ten most important features <span class="citation" data-cites="fig-shap_values">(<a href="#ref-fig-shap_values" role="doc-biblioref"><strong>fig-shap_values?</strong></a>)</span> were selected based on their SHAP values and used to train a subsequent model <span class="citation" data-cites="tbl-predictors">(<a href="#ref-tbl-predictors" role="doc-biblioref"><strong>tbl-predictors?</strong></a>)</span>. This refined model demonstrated improved performance and reduced computational time compared to the initial model. The final model, trained on this optimized feature subset, was ultimately used for the analysis presented here.</p>
+</section>
+</section>
+<section id="statistical-analyses" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-analyses">Statistical Analyses</h3>
+<p>Statistical analyses were conducted on annual BFI and base-flow values from instrumented streamgages to identify temporal trends using the Mann-Kendall nonparametric trend test <span class="citation" data-cites="kendall1970 mann1945nonparametric">(<a href="#ref-kendall1970" role="doc-biblioref">Kendall 1970</a>; <a href="#ref-mann1945nonparametric" role="doc-biblioref">Mann 1945</a>)</span>. This test detects monotonic trends in datasets that are non-parametric and assumes the absence of autocorrelation among observations. This test is widely used in studies of this nature <span class="citation" data-cites="ficklin2016 ayers2019 woodhouse_udall22">(<a href="#ref-ficklin2016" role="doc-biblioref">Ficklin et al. 2016</a>; <a href="#ref-ayers2019" role="doc-biblioref">Ayers et al. 2019</a>; <a href="#ref-woodhouse_udall22" role="doc-biblioref">Woodhouse et al. 2022</a>)</span>.</p>
+<p>To check for autocorrelation, we applied the Durbin-Watson test, which revealed significant autocorrelation at four streamgages on an annual basis. Of these, only one streamgage (09486500 - Santa Cruz River at Cortaro, AZ) showed a significant trend in BFI. This streamgage was excluded from the trend analysis, as autocorrelation could inflate the variance of the Mann-Kendall statistic, potentially leading to biased trend estimates <span class="citation" data-cites="MK_Hamed1998">(<a href="#ref-MK_Hamed1998" role="doc-biblioref">Hamed and Rao 1998</a>)</span>. Trends with a <span class="math inline">\(\rho \le 0.05\)</span> are considered significant.</p>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<section id="bfi-of-ungauged-catchments" class="level3">
+<h3 class="anchored" data-anchor-id="bfi-of-ungauged-catchments">BFI of Ungauged Catchments</h3>
+<section id="model-validation" class="level4">
+<h4 class="anchored" data-anchor-id="model-validation">Model Validation</h4>
+<p>Predicted values of BFI are plotted against observed values for the entire period of record of the instrumented dataset in <span class="citation" data-cites="fig-actual_predicted">(<a href="#ref-fig-actual_predicted" role="doc-biblioref"><strong>fig-actual_predicted?</strong></a>)</span> . The agreement between “out-of-bag” predictions (blind cross-validation, treating each site as ungauged) and observed values is acceptable (R<sup>2</sup> = 0.764) indicating that the model performs well across the full dataset. The overall RMSE is 0.129 and the overall percent bias (pbias) is -5.6%. Model performance metrics across various classifications are summarized in <span class="citation" data-cites="tbl-performance">(<a href="#ref-tbl-performance" role="doc-biblioref"><strong>tbl-performance?</strong></a>)</span>. These performance metrics demonstrate that the regional model performs consistently well across different spatial and climatic classifications. However, the negative pbias values across all classifications, along with the overall pbias, indicate a systematic underprediction of BFI by the model. Categories with relatively lower R<sup>2</sup> and Nash-Sutcliffe Efficiency (NSE) values also exhibit higher biases, reflecting weaker model performance in those specific contexts.</p>
+<div id="fig-actual_predicted" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-actual_predicted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/actual-predicted.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed, green line is regressed to the data."><img src="images/actual-predicted.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-actual_predicted-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Linear relationship between observed BFI and predicted BFI. The solid line is the 1:1 line, the dashed, green line is regressed to the data.
+</figcaption>
+</figure>
+</div>
+<div id="tbl-performance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Performance of model predictions for BFI for all sites split by various classifications. n is number of observations, R<sup>2</sup> is the coefficient of determination of a linear regression, MSE is mean-squared-error, RMSE is root-mean-squared-error, MAE is mean-absolute-error, NSE is Nash-Sutcliffe efficiency, and pbias is percent bias.
+</figcaption>
+<div aria-describedby="tbl-performance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Classification Group</strong></th>
+<th><strong>n</strong></th>
+<th><strong>R2</strong></th>
+<th><strong>MSE</strong></th>
+<th><strong>RMSE</strong></th>
+<th><strong>MAE</strong></th>
+<th><strong>NSE</strong></th>
+<th><strong>pbias</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Climate - Monsoon Dominated</td>
+<td>3039</td>
+<td>0.633</td>
+<td>0.016</td>
+<td>0.126</td>
+<td>0.074</td>
+<td>0.619</td>
+<td>-13.7</td>
+</tr>
+<tr class="even">
+<td>Climate - Snowmelt Dominated</td>
+<td>4685</td>
+<td>0.733</td>
+<td>0.015</td>
+<td>0.121</td>
+<td>0.087</td>
+<td>0.725</td>
+<td>-3.5</td>
+</tr>
+<tr class="odd">
+<td>PhysRegion - Basin&amp;Range</td>
+<td>6147</td>
+<td>0.733</td>
+<td>0.016</td>
+<td>0.127</td>
+<td>0.084</td>
+<td>0.724</td>
+<td>-6.3</td>
+</tr>
+<tr class="even">
+<td>PhysRegion - CO Plateau</td>
+<td>1577</td>
+<td>0.846</td>
+<td>0.011</td>
+<td>0.104</td>
+<td>0.073</td>
+<td>0.843</td>
+<td>-3.8</td>
+</tr>
+<tr class="odd">
+<td>Climate - Warm-Wet</td>
+<td>1506</td>
+<td>0.693</td>
+<td>0.014</td>
+<td>0.117</td>
+<td>0.077</td>
+<td>0.685</td>
+<td>-8.2</td>
+</tr>
+<tr class="even">
+<td>Climate - Warm-Dry</td>
+<td>2351</td>
+<td>0.693</td>
+<td>0.022</td>
+<td>0.147</td>
+<td>0.092</td>
+<td>0.675</td>
+<td>-11.9</td>
+</tr>
+<tr class="odd">
+<td>Climate - Cool-Wet</td>
+<td>2350</td>
+<td>0.738</td>
+<td>0.011</td>
+<td>0.106</td>
+<td>0.078</td>
+<td>0.736</td>
+<td>-1.7</td>
+</tr>
+<tr class="even">
+<td>Climate - Cool-Dry</td>
+<td>1517</td>
+<td>0.831</td>
+<td>0.012</td>
+<td>0.111</td>
+<td>0.078</td>
+<td>0.827</td>
+<td>-4.3</td>
+</tr>
+<tr class="odd">
+<td>Slope - High</td>
+<td>3795</td>
+<td>0.776</td>
+<td>0.012</td>
+<td>0.111</td>
+<td>0.079</td>
+<td>0.771</td>
+<td>-3.3</td>
+</tr>
+<tr class="even">
+<td>Slope - Low</td>
+<td>3929</td>
+<td>0.724</td>
+<td>0.018</td>
+<td>0.133</td>
+<td>0.085</td>
+<td>0.713</td>
+<td>-9.1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-predictor-importance" class="level4">
+<h4 class="anchored" data-anchor-id="sec-predictor-importance">Predictor Importance</h4>
+<p>The predictors used to estimate BFI at ungauged sites were evaluated for their importance in the final XGBoost model, as illustrated in <span class="citation" data-cites="fig-shap_values">(<a href="#ref-fig-shap_values" role="doc-biblioref"><strong>fig-shap_values?</strong></a>)</span>. The most influential feature for predicting long-term BFI is basin elevation. While elevation itself does not directly affect base-flow characteristics, it has consistently been identified as a key predictor in previous BFI studies <span class="citation" data-cites="singh2018 beck2013">(<a href="#ref-singh2018" role="doc-biblioref">Singh et al. 2018</a>; <a href="#ref-beck2013" role="doc-biblioref">Beck et al. 2013</a>)</span>. The importance of elevation aligns with findings from <span class="citation" data-cites="beck2013">Beck et al. (<a href="#ref-beck2013" role="doc-biblioref">2013</a>)</span>, highlighting its role as a proxy for climate variables such as temperature, precipitation, and snowpack duration. Seasonal snowpack duration, in particular, has been shown to strongly correlate with springflow and groundwater recharge in this region <span class="citation" data-cites="donovan_karst_2022">(<a href="#ref-donovan_karst_2022" role="doc-biblioref">Donovan et al. 2022</a>)</span>. This relationship is further supported by hydroclimate features where higher temperatures tend to negatively influence BFI, while precipitation exhibits a mixed influence. In some cases, higher precipitation values correlate with lower BFI, likely due to a larger proportion of precipitation contributing to runoff rather than infiltration and groundwater recharge.</p>
+<div id="fig-shap_values" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-shap_values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/shap_summary.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="SHAP value plot of features used in final model. Land cover features are indicated by the percentage of cover by each land cover type and soil types are defined by hydrologic soil group."><img src="images/shap_summary.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-shap_values-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+SHAP value plot of features used in final model. Land cover features are indicated by the percentage of cover by each land cover type and soil types are defined by hydrologic soil group.
+</figcaption>
+</figure>
+</div>
+<p>Land cover and land use predictors also play a significant role in BFI estimation. Analysis of SHAP values indicates that a higher percentage of evergreen forest positively influences BFI predictions, while higher proportions of shrubland and developed land exert a negative influence. Similarly, hydrologic soil types show distinct trends in their impact on BFI. Soil Type C, characterized by moderately high runoff potential (20-40% clay), tends to negatively influence BFI. In contrast, Soil Type A, which has low runoff potential and facilitates rapid water infiltration, exhibits a mixed influence <span class="citation" data-cites="nrcs2009">(<a href="#ref-nrcs2009" role="doc-biblioref">USDA 2009</a>)</span>. The mixed effects of Soil Type A are likely due to SHAP values capturing interactions between features rather than direct relationships. For example, regions dominated by Soil Type A may also have steep slopes or sparse vegetation. Additionally, the relationship between Soil Type A and BFI is likely non-linear and influenced by the complex dynamics of regional base-flow processes.</p>
+</section>
+<section id="predicted-long-term-bfi" class="level4">
+<h4 class="anchored" data-anchor-id="predicted-long-term-bfi">Predicted Long-term BFI</h4>
+<div id="fig-bfi-huc" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-bfi-huc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/BFI_HUC8_20250129.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Predicted long-term BFI values for 8-digit HUC (1991-2020)"><img src="images/BFI_HUC8_20250129.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-bfi-huc-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Predicted long-term BFI values for 8-digit HUC (1991-2020)
+</figcaption>
+</figure>
+</div>
+<p>The regionalized (HUC-8) long-term BFI (1991–2020) is shown in <span class="citation" data-cites="fig-bfi-huc">(<a href="#ref-fig-bfi-huc" role="doc-biblioref"><strong>fig-bfi-huc?</strong></a>)</span>. Basins with high BFIs, such as those along the Grand Canyon in the northwestern part of the study area, indicate greater surface water and groundwater interaction. Elevated BFI values are also observed along portions of the Mogollon Rim, a heavily forested region with high precipitation that marks the transition between physiographic regions. Additionally, headwater regions of perennial rivers tend to exhibit higher BFI values. In contrast, low BFI values are found in areas like the Defiance Plateau in northeastern Arizona and the arid southern regions of the state. While BFI values and their spatial patterns may align with certain terrain features or climatic patterns, it is important to recognize that BFI is driven by complex interactions among multiple factors <span class="citation" data-cites="fig-shap_values">(<a href="#ref-fig-shap_values" role="doc-biblioref"><strong>fig-shap_values?</strong></a>)</span>.</p>
+</section>
+</section>
+<section id="bfi-of-gauged-catchments" class="level3">
+<h3 class="anchored" data-anchor-id="bfi-of-gauged-catchments">BFI of Gauged Catchments</h3>
+<div id="fig-instrumented-bfi" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-instrumented-bfi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/BFI_Instrumented_20241203.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Long-term BFI for the period of record from instrumented stream flow data."><img src="images/BFI_Instrumented_20241203.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-instrumented-bfi-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Long-term BFI for the period of record from instrumented stream flow data.
+</figcaption>
+</figure>
+</div>
+<p>The long-term BFI for the 205 gauged reaches across Arizona is illustrated in <span class="citation" data-cites="fig-instrumented-bfi">(<a href="#ref-fig-instrumented-bfi" role="doc-biblioref"><strong>fig-instrumented-bfi?</strong></a>)</span> . The long-term mean BFI is 0.32, indicating that ~32% of long-term streamflow in Arizona likely originates from groundwater discharge and other delayed sources. The highest BFI values (&gt;0.9) are found along the Grand Canyon in northwestern Arizona. The highly karstic geology of this region facilitates the rapid movement of subsurface flow to surface water and spring outlets <span class="citation" data-cites="chambless_deep-karst_2023">(<a href="#ref-chambless_deep-karst_2023" role="doc-biblioref">Chambless et al. 2023</a>)</span>. Relatively high BFI values (&gt;0.8) are found at the spring-fed headwaters of the Verde River (Del Rio Spring) and the spring-fed headwaters of Fossil Creek. These results are consistent with interpolated BFI values reported by <span class="citation" data-cites="wolock2003">Wolock (<a href="#ref-wolock2003" role="doc-biblioref">2003</a>)</span>.</p>
+<p>The stream reaches of the Little Colorado River Basin (northeastern Arizona) indicate consistently low BFI values (&lt; 0.2). This is likely due to low-yielding perched aquifers underlying the Defiance Plateau in northeastern Arizona, which are hydrologically connected to surface streams, while the high-yield, confined regional aquifer is much deeper <span class="citation" data-cites="blanchard02">(<a href="#ref-blanchard02" role="doc-biblioref">Blanchard 2002</a>)</span>. A notable tendency emerges along most major rivers in the study area: upstream reaches tend to exhibit higher BFI values, while downstream reaches display lower values. This pattern is presumed to result from greater groundwater-surface water interactions at stream headwaters, influenced by spring outlets, and the dilution of base flow as water moves downstream. This trend is particularly evident along the Gila River, Verde River, and Little Colorado River in Arizona.</p>
+<section id="sec-bfi-trends" class="level4">
+<h4 class="anchored" data-anchor-id="sec-bfi-trends">Trends in Base Flow &amp; BFI</h4>
+<p>Trends in BFI over the period of record for each streamgage in this analysis are illustrated in <span class="citation" data-cites="fig-instrumented-trend">(<a href="#ref-fig-instrumented-trend" role="doc-biblioref"><strong>fig-instrumented-trend?</strong></a>)</span> and <span class="citation" data-cites="tbl-trends">(<a href="#ref-tbl-trends" role="doc-biblioref"><strong>tbl-trends?</strong></a>)</span>. Base flow and BFI trends were analyzed across all instrumented sites over their respective periods of record using the Mann–Kendall test. Statistically significant trends were observed in both metrics, with a 72.20% coincidence rate between significant base flow and BFI trends, indicating a strong dependence of BFI on base-flow dynamics.</p>
+<p><span class="citation" data-cites="fig-instrumented-trend">(<a href="#ref-fig-instrumented-trend" role="doc-biblioref"><strong>fig-instrumented-trend?</strong></a>)</span> illustrates the spatial variation in BFI trends across the study area. Statistically significant decreasing trends are observed at 16.1% of sites, while increasing trends are found at 8.8% of sites, with no clear regional patterns for either. In the Basin and Range physiographic region, 9% of sites show increasing trends, while 16.7% exhibit decreasing trends. In the Colorado Plateau region, increasing trends occur at 6.1% of sites, and decreasing trends are observed at 14.3% of sites.</p>
+<div id="fig-instrumented-trend" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-instrumented-trend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="images/BFITrends_20241203.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends."><img src="images/BFITrends_20241203.png" class="img-fluid figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-instrumented-trend-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Trends in BFI over full period of record for instrumented sites used in this study. Red upward (blue downward) arrows indicate an increasing (decreasing) trend at a significance level of 5%. White circles represent sites with no statistically significant trends.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="classification-trends" class="level4">
+<h4 class="anchored" data-anchor-id="classification-trends">Classification Trends</h4>
+<p>Classifications presented in <span class="citation" data-cites="tbl-trends">(<a href="#ref-tbl-trends" role="doc-biblioref"><strong>tbl-trends?</strong></a>)</span> were determined based on precipitation regime, physiographic region, climate, and slope. The dominant precipitation regime (monsoon vs.&nbsp;snowmelt) was identified by analyzing streamflow hydrographs for each station, focusing on peak flow periods during the monsoon season (July–September) and the snowmelt season (March–June). Physiographic region was assigned based on which region the streamgage is located. Climate classifications were defined as warm (above the long-term median temperature of Arizona), cool (below the long-term median temperature), wet (above the long-term median precipitation), and dry (below the long-term median precipitation). Slope was categorized as high (above the median slope) and low (below the median slope).</p>
+<p>Statistically significant decreasing trends in BFI were more common than increasing trends across all site classifications (<span class="citation" data-cites="tbl-trends">(<a href="#ref-tbl-trends" role="doc-biblioref"><strong>tbl-trends?</strong></a>)</span>). While decreasing trends dominate, both increasing and decreasing trends are observed within each classification. Monsoon-dominated regions exhibit a higher proportion of significant negative trends (24.1%) compared to snowmelt-dominated regions (10.2%), suggesting that monsoon-dominated systems are more consistently correlated with declining base flow. Among climate classifications, warm-dry climates have the highest proportion of negative trends (20.0%), followed by warm-wet climates (19.4%), indicating that regions with higher temperatures are more prone to base flow declines. Low-slope regions show a greater prevalence of negative trends (20.4%) compared to high-slope regions (11.8%). This suggests that flatter areas may be more susceptible to base-flow reductions, potentially due to differences in hydrologic connectivity and recharge dynamics.</p>
+<div id="tbl-trends" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Comparison of trends for BFI for all sites split by various classifications. Only sites with a significant (<span class="math inline">\(\rho \le 0.05\)</span>) trend are included here as established by a Mann-Kendall test for monotonic trends across the full period of record. n is the number of sites, n_pos (n_neg) is the number of sites with positive (negative) trends, perc_pos (perc_neg) is the percentage of n with a positive (negative) trend.
+</figcaption>
+<div aria-describedby="tbl-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Classification Group</strong></th>
+<th><strong>n</strong></th>
+<th><strong>n_pos</strong></th>
+<th><strong>n_neg</strong></th>
+<th><strong>perc_pos</strong></th>
+<th><strong>perc_neg</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Precipitation - Monsoon Dominated</td>
+<td>87</td>
+<td>8</td>
+<td>21</td>
+<td>0.092</td>
+<td>0.241</td>
+</tr>
+<tr class="even">
+<td>Precipitation - Snowmelt Dominated</td>
+<td>118</td>
+<td>9</td>
+<td>12</td>
+<td>0.076</td>
+<td>0.102</td>
+</tr>
+<tr class="odd">
+<td>Physiographic Region - Basin and Range</td>
+<td>156</td>
+<td>14</td>
+<td>26</td>
+<td>0.090</td>
+<td>0.167</td>
+</tr>
+<tr class="even">
+<td>Physiographic Region - Colorado Plateau</td>
+<td>49</td>
+<td>3</td>
+<td>7</td>
+<td>0.061</td>
+<td>0.143</td>
+</tr>
+<tr class="odd">
+<td>Climate - Warm-Wet</td>
+<td>31</td>
+<td>2</td>
+<td>6</td>
+<td>0.065</td>
+<td>0.194</td>
+</tr>
+<tr class="even">
+<td>Climate - Warm-Dry</td>
+<td>55</td>
+<td>6</td>
+<td>11</td>
+<td>0.109</td>
+<td>0.200</td>
+</tr>
+<tr class="odd">
+<td>Climate - Cool-Wet</td>
+<td>74</td>
+<td>4</td>
+<td>9</td>
+<td>0.054</td>
+<td>0.122</td>
+</tr>
+<tr class="even">
+<td>Climate - Cool-Dry</td>
+<td>45</td>
+<td>5</td>
+<td>7</td>
+<td>0.111</td>
+<td>0.156</td>
+</tr>
+<tr class="odd">
+<td>Slope - High</td>
+<td>102</td>
+<td>10</td>
+<td>12</td>
+<td>0.098</td>
+<td>0.118</td>
+</tr>
+<tr class="even">
+<td>Slope - Low</td>
+<td>103</td>
+<td>7</td>
+<td>21</td>
+<td>0.068</td>
+<td>0.204</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="coincident-climate-trends" class="level4">
+<h4 class="anchored" data-anchor-id="coincident-climate-trends">Coincident Climate Trends</h4>
+<p>Given the variations in the period of record across the instrumented network (see Figure S2), we analyzed trends in base flow and BFI in relation to coincident trends in climate variables. Trends are classified as coincident when the direction of the climate variable trend (positive or negative) aligns with the trend observed in base flow or BFI (<span class="citation" data-cites="tbl-coincident-trends">(<a href="#ref-tbl-coincident-trends" role="doc-biblioref"><strong>tbl-coincident-trends?</strong></a>)</span>). This analysis includes both significant and non-significant trends, which is appropriate where the influence of complex, interconnected processes may not always manifest as statistically significant patterns over limited observational periods <span class="citation" data-cites="ficklin2016">(<a href="#ref-ficklin2016" role="doc-biblioref">Ficklin et al. 2016</a>)</span>.</p>
+<div id="tbl-coincident-trends" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-coincident-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Coincident trends of climate variables (ET<sub>O</sub>, precipitation, temperature) with base flow and BFI trends.
+</figcaption>
+<div aria-describedby="tbl-coincident-trends-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: center;"><strong>Climate Variable</strong></th>
+<th style="text-align: center;"><strong>Coincidence Percentage (%)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>BFI</td>
+<td style="text-align: center;">ET<sub>O</sub></td>
+<td style="text-align: center;">44.88</td>
+</tr>
+<tr class="even">
+<td></td>
+<td style="text-align: center;">Precipitation</td>
+<td style="text-align: center;">53.17</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td style="text-align: center;">Temperature</td>
+<td style="text-align: center;">47.32</td>
+</tr>
+<tr class="even">
+<td>Base Flow</td>
+<td style="text-align: center;">ET<sub>O</sub></td>
+<td style="text-align: center;">55.12</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td style="text-align: center;">Precipitation</td>
+<td style="text-align: center;">64.88</td>
+</tr>
+<tr class="even">
+<td></td>
+<td style="text-align: center;">Temperature</td>
+<td style="text-align: center;">39.02</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The analysis shows that base flow and BFI trends most frequently align with precipitation trends (64.88% and 53.17%, respectively), emphasizing precipitation as the primary driver of local groundwater recharge and discharge. Coincidence with ET<sub>O</sub> (reference evapotranspiration) trends (55.12% for base flow and 44.88% for BFI) suggests that evapotranspiration also plays a significant role, particularly in arid regions where it can reduce recharge or base flow during dry periods. In contrast, temperature trends show lower percentages of coincidence, often opposing base flow and BFI trends. Specifically, positive (negative) temperature trends are frequently associated with negative (positive) base-flow trends (60.98%) and BFI trends (52.68%). These results highlight the complex interplay between climatic variables and hydrological processes. While precipitation exerts the strongest influence on base flow and BFI, evapotranspiration and temperature add further variability in specific environmental contexts.</p>
+</section>
+</section>
+</section>
+<section id="sec-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="sec-conclusion">Summary &amp; Conclusions</h2>
+<p>This study provides new insights into base-flow dynamics and groundwater contributions in Arizona’s dryland rivers by combining an analysis of instrumented streamflow records with machine learning predictions for ungauged basins. The results highlight significant spatial variability in BFI, with approximately 32% of Arizona’s long-term streamflow originating from groundwater discharge. Regions such as the Grand Canyon and Mogollon Rim demonstrate high BFI values due to strong groundwater-surface water interactions, while areas like the Little Colorado River Basin exhibit low BFI values, reflecting limited groundwater recharge (<span class="citation" data-cites="fig-bfi-huc">(<a href="#ref-fig-bfi-huc" role="doc-biblioref"><strong>fig-bfi-huc?</strong></a>)</span>).</p>
+<p>Using an XGBoost machine learning algorithm, we successfully predicted long-term BFI in ungauged basins, achieving strong model performance (R² = 0.764, RMSE = 0.129). The model performed well across all classifications, demonstrating its robustness in capturing base-flow dynamics across a region with substantial variability in climate, elevation, and physiographic characteristics (<span class="citation" data-cites="tbl-performance">(<a href="#ref-tbl-performance" role="doc-biblioref"><strong>tbl-performance?</strong></a>)</span>). Key predictors included elevation, land cover, and soil type, highlighting the importance of integrating hydroclimate and physiographic characteristics into regional hydrological models (<span class="citation" data-cites="fig-shap_values">(<a href="#ref-fig-shap_values" role="doc-biblioref"><strong>fig-shap_values?</strong></a>)</span>). These predictions address the limitations posed by Arizona’s sparse streamgage network, offering a scalable approach to estimate BFI in data-limited regions.</p>
+<p>Our analysis of BFI trends in gauged catchments revealed that precipitation is the primary driver of base-flow variability, with evapotranspiration and temperature contributing additional complexity (<span class="citation" data-cites="tbl-coincident-trends">(<a href="#ref-tbl-coincident-trends" role="doc-biblioref"><strong>tbl-coincident-trends?</strong></a>)</span>). These findings emphasize the critical role of climate-hydrology interactions in shaping groundwater contributions to streamflow. Inverse trends between temperature and BFI suggest that further warming could reduce groundwater contributions to streamflow. Coincident trends in precipitation and BFI further underscore the importance of understanding recharge processes, especially in arid and semi-arid landscapes, where precipitation events play key roles in replenishing groundwater.</p>
+<p>The utility of the streamgage networks for base-flow analyses in Arizona is limited by their design and focus. There has been an increase in the number of streamgages in the region to meet regulatory imperatives, such as the Clean Water Act. Even so, many of these gages are not suited for base-flow studies because they emphasize peak flow monitoring and lack the ability to accurately measure low-flow dynamics <span class="citation" data-cites="flood-control2020">(<a href="#ref-flood-control2020" role="doc-biblioref">Maricopa County 2020</a>)</span>. New, non-USGS streamgages are typically installed by flood control districts (e.g.&nbsp;the ALERT system) and are designed to track flood flows rather than base flow. New USGS streamgages have been added over the past decade to address instream flow rights and to improve the density of monitoring in the future.</p>
+<p>This study demonstrates the benefits of combining observational records with machine learning to improve our understanding of streamflow processes in drylands. Future work should explore the projected effects of climate change on base-flow processes and developing models for other data-poor regions. The framework presented here has broad applicability to other arid and semi-arid regions worldwide and can inform water resource management strategies aimed at addressing water scarcity and adapting to climate variability.</p>
+</section>
+<section id="open-research" class="level2">
+<h2 class="anchored" data-anchor-id="open-research">Open Research</h2>
+<p>All code and data necessary to reproduce the analyses presented in this manuscript are available at: <a href="https://github.com/CaelumMroczek/baseflow-AZ" class="uri">https://github.com/CaelumMroczek/baseflow-AZ</a>.</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>The authors would like to express gratitude to the following people for helpful discussion and suggestions: Cole Denver, Aidan Houlgate, Rayni Lewis, Ryan Lima, Quentin McCalla, Isaiah Mesa, Georgia Roberts. This research was supported by an Arizona Board of Regents’ Grant from the Technology and Research Initiative Fund governed by A.R.S. § 15-1648. The authors acknowledge the financial support provided by this grant, which made this study possible.</p>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-abatzoglou2018" class="csl-entry" role="listitem">
+Abatzoglou, John T. et al. 2018. <span>“TerraClimate, a High-Resolution Global Dataset of Monthly Climate and Climatic Water Balance from 1958<span></span>2015.”</span> <em>Scientific Data</em> 5 (1): 170191. <a href="https://doi.org/10.1038/sdata.2017.191">https://doi.org/10.1038/sdata.2017.191</a>.
+</div>
+<div id="ref-ahiablame2013" class="csl-entry" role="listitem">
+Ahiablame, Laurent et al. 2013. <span>“Estimation of Annual Baseflow at Ungauged Sites in Indiana USA.”</span> <em>Journal of Hydrology</em> 476: 13–27. <a href="https://doi.org/10.1016/j.jhydrol.2012.10.002">https://doi.org/10.1016/j.jhydrol.2012.10.002</a>.
+</div>
+<div id="ref-az_climate2024" class="csl-entry" role="listitem">
+Arizona State Climate Office. 2024. <span>“<span class="nocase">Climate of Arizona</span>.”</span> <a href="https://globalfutures.asu.edu/azclimate/climate/">https://globalfutures.asu.edu/azclimate/climate/</a>.
+</div>
+<div id="ref-arnold1995" class="csl-entry" role="listitem">
+Arnold, J. G. et al. 1995. <span>“Automated Base Flow Separation and Recession Analysis Techniques.”</span> <em>Ground Water</em> 33 (6): 1010–18. <a href="https://doi.org/10.1111/j.1745-6584.1995.tb00046.x">https://doi.org/10.1111/j.1745-6584.1995.tb00046.x</a>.
+</div>
+<div id="ref-ARNOLD200021" class="csl-entry" role="listitem">
+——— et al. 2000. <span>“Regional Estimation of Base Flow and Groundwater Recharge in the Upper Mississippi River Basin.”</span> <em>Journal of Hydrology</em> 227 (1): 21–40. https://doi.org/<a href="https://doi.org/10.1016/S0022-1694(99)00139-0">https://doi.org/10.1016/S0022-1694(99)00139-0</a>.
+</div>
+<div id="ref-ayers2019" class="csl-entry" role="listitem">
+Ayers, Jessica R., Gabriele Villarini, Christopher Jones, and Keith Schilling. 2019. <span>“Changes in Monthly Baseflow Across the U.S. Midwest.”</span> <em>Hydrological Processes</em> 33 (5): 748–58. <a href="https://doi.org/10.1002/hyp.13359">https://doi.org/10.1002/hyp.13359</a>.
+</div>
+<div id="ref-beck2013" class="csl-entry" role="listitem">
+Beck, Hylke E. et al. 2013. <span>“Global Patterns in Base Flow Index and Recession Based on Streamflow Observations from 3394 Catchments: Global Patterns in Base Flow Characteristics.”</span> <em>Water Resources Research</em> 49 (12): 7843–63. <a href="https://doi.org/10.1002/2013WR013918">https://doi.org/10.1002/2013WR013918</a>.
+</div>
+<div id="ref-blanchard02" class="csl-entry" role="listitem">
+Blanchard, Paul J. 2002. <span>“Assessments of Aquifer Sensitivity on <span>Navajo Nation</span> and Adjacent Lands and Ground-Water Vulnerability to Pesticide Contamination on the <span>Navajo Indian Irrigation Project</span>, <span>Arizona</span>, <span>New Mexico</span>, and <span>Utah</span>.”</span> Water-Resources Investigations Report 02-4051. <span>USGS</span>. <a href="https://doi.org/10.3133/wri024051">https://doi.org/10.3133/wri024051</a>.
+</div>
+<div id="ref-bloomfield2009" class="csl-entry" role="listitem">
+Bloomfield, J. P. et al. 2009. <span>“Examining Geological Controls on Baseflow Index (BFI) Using Regression Analysis: An Illustration from the Thames Basin, UK.”</span> <em>Journal of Hydrology</em> 373 (1-2): 164–76. <a href="https://doi.org/10.1016/j.jhydrol.2009.04.025">https://doi.org/10.1016/j.jhydrol.2009.04.025</a>.
+</div>
+<div id="ref-bosch2017" class="csl-entry" role="listitem">
+Bosch, David D. et al. 2017. <span>“Temporal Variations in Baseflow for the Little River Experimental Watershed in South Georgia, USA.”</span> <em>Journal of Hydrology: Regional Studies</em> 10 (April): 110–21. <a href="https://doi.org/10.1016/j.ejrh.2017.02.002">https://doi.org/10.1016/j.ejrh.2017.02.002</a>.
+</div>
+<div id="ref-buban_PRISM" class="csl-entry" role="listitem">
+Buban, Michael S. et al. 2020. <span>“A Comparison of the u.s. Climate Reference Network Precipitation Data to the Parameter-Elevation Regressions on Independent Slopes Model (PRISM).”</span> <em>Journal of Hydrometeorology</em> 21 (10): 2391–2400. <a href="https://doi.org/10.1175/JHM-D-19-0232.1">https://doi.org/10.1175/JHM-D-19-0232.1</a>.
+</div>
+<div id="ref-chambless_deep-karst_2023" class="csl-entry" role="listitem">
+Chambless, Hannah E. et al. 2023. <span>“Deep-Karst Aquifer Spring-Flow Trends in a Water-Limited System, Grand Canyon National Park, <span>USA</span>.”</span> <em>Hydrogeology Journal</em> 31 (7): 1755–71. <a href="https://doi.org/10.1007/s10040-023-02702-w">https://doi.org/10.1007/s10040-023-02702-w</a>.
+</div>
+<div id="ref-chen2016xgboost" class="csl-entry" role="listitem">
+Chen, Tianqi et al. 2016. <span>“Xgboost: A Scalable Tree Boosting System.”</span> In <em>Proceedings of the 22nd Acm Sigkdd International Conference on Knowledge Discovery and Data Mining</em>, 785–94.
+</div>
+<div id="ref-daly2008" class="csl-entry" role="listitem">
+Daly, Christopher et al. 2008. <span>“Physiographically Sensitive Mapping of Climatological Temperature and Precipitation Across the Conterminous United States.”</span> <em>International Journal of Climatology</em> 28 (15): 2031–64. <a href="https://doi.org/10.1002/joc.1688">https://doi.org/10.1002/joc.1688</a>.
+</div>
+<div id="ref-donovan_karst_2022" class="csl-entry" role="listitem">
+Donovan, Keegan M. et al. 2022. <span>“Karst Spring Processes and Storage Implications in High Elevation, Semiarid Southwestern United States.”</span> In <em>Geophysical Monograph Series</em>, edited by Matthew J. Currell and Brian G. Katz, 1st ed., 35–50. Wiley. <a href="https://doi.org/10.1002/9781119818625.ch4">https://doi.org/10.1002/9781119818625.ch4</a>.
+</div>
+<div id="ref-eastoe2019mtnblock" class="csl-entry" role="listitem">
+Eastoe, Christopher J. et al. 2019. <span>“Hydrology of Mountain Blocks in Arizona and New Mexico as Revealed by Isotopes in Groundwater and Precipitation.”</span> <em>Geosciences</em> 9 (11). <a href="https://doi.org/10.3390/geosciences9110461">https://doi.org/10.3390/geosciences9110461</a>.
+</div>
+<div id="ref-eckhardt2005" class="csl-entry" role="listitem">
+Eckhardt, K. 2005. <span>“How to Construct Recursive Digital Filters for Baseflow Separation.”</span> <em>Hydrological Processes</em> 19 (2): 507–15. <a href="https://doi.org/10.1002/hyp.5675">https://doi.org/10.1002/hyp.5675</a>.
+</div>
+<div id="ref-eckhardt2008" class="csl-entry" role="listitem">
+———. 2008. <span>“A Comparison of Baseflow Indices, Which Were Calculated with Seven Different Baseflow Separation Methods.”</span> <em>Journal of Hydrology</em> 352 (1-2): 168–73. <a href="https://doi.org/10.1016/j.jhydrol.2008.01.005">https://doi.org/10.1016/j.jhydrol.2008.01.005</a>.
+</div>
+<div id="ref-eckhardt2023" class="csl-entry" role="listitem">
+———. 2023. <span>“Technical Note: How Physically Based Is Hydrograph Separation by Recursive Digital Filtering?”</span> <em>Hydrology and Earth System Sciences</em> 27 (2): 495–99. <a href="https://doi.org/10.5194/hess-27-495-2023">https://doi.org/10.5194/hess-27-495-2023</a>.
+</div>
+<div id="ref-fekete2007" class="csl-entry" role="listitem">
+Fekete, Balázs M et al. 2007. <span>“The Current Status of Global River Discharge Monitoring and Potential New Technologies Complementing Traditional Discharge Measurements.”</span> <em>IAHS Publications</em>.
+</div>
+<div id="ref-ficklin2016" class="csl-entry" role="listitem">
+Ficklin, Darren L. et al. 2016. <span>“Impacts of Recent Climate Change on Trends in Baseflow and Stormflow in United States Watersheds.”</span> <em>Geophysical Research Letters</em> 43 (10): 5079–88. <a href="https://doi.org/10.1002/2016GL069121">https://doi.org/10.1002/2016GL069121</a>.
+</div>
+<div id="ref-fuka2014ecohydrology" class="csl-entry" role="listitem">
+Fuka, DR et al. 2014. <span>“EcoHydRology: A Community Modeling Foundation for Eco-Hydrology.”</span> <em>R Package Version 0.4</em> 12.
+</div>
+<div id="ref-Georganos2018Very" class="csl-entry" role="listitem">
+Georganos, S. et al. 2018. <span>“Very High Resolution Object-Based Land Use–Land Cover Urban Classification Using Extreme Gradient Boosting.”</span> <em>IEEE Geoscience and Remote Sensing Letters</em> 15: 607–11. <a href="https://doi.org/10.1109/LGRS.2018.2803259">https://doi.org/10.1109/LGRS.2018.2803259</a>.
+</div>
+<div id="ref-gonzales2009" class="csl-entry" role="listitem">
+Gonzales, A. L. et al. 2009. <span>“Comparison of Different Base Flow Separation Methods in a Lowland Catchment.”</span> <em>Hydrology and Earth System Sciences</em> 13 (11): 2055–68. <a href="https://doi.org/10.5194/hess-13-2055-2009">https://doi.org/10.5194/hess-13-2055-2009</a>.
+</div>
+<div id="ref-MK_Hamed1998" class="csl-entry" role="listitem">
+Hamed, Khaled H., and A. Rao. 1998. <span>“A Modified Mann-Kendall Trend Test for Autocorrelated Data.”</span> <em>Journal of Hydrology</em> 204 (1): 182–96. https://doi.org/<a href="https://doi.org/10.1016/S0022-1694(97)00125-X">https://doi.org/10.1016/S0022-1694(97)00125-X</a>.
+</div>
+<div id="ref-instituteofhydrology1980" class="csl-entry" role="listitem">
+Hydrology, Institute of. 1980. <span>“Low Flow Studies Report 3 Catchment Characteristic Estimation Manual.”</span> Institute of Hydrology.
+</div>
+<div id="ref-iucn-drylands-2019" class="csl-entry" role="listitem">
+IUCN. 2019. <span>“Drylands and Climate Change.”</span> <a href="https://www.iucn.org/resources/issues-brief/drylands-and-climate-change">https://www.iucn.org/resources/issues-brief/drylands-and-climate-change</a>.
+</div>
+<div id="ref-kendall1970" class="csl-entry" role="listitem">
+Kendall, Maurice G. 1970. <em>Rank Correlation Methods</em>. 4th ed. London: Griffin.
+</div>
+<div id="ref-epa_AZephemeral" class="csl-entry" role="listitem">
+Levick, Lainie R. et al. 2008. <span>“<span class="nocase">The ecological and hydrological significance of ephemeral and intermittent streams in the arid and semi-arid American Southwest</span>.”</span> <em>U.S. Environmental Protection Agency and USDA/ARS Southwest Watershed Research Center</em>, no. EPA/600/R-08/134 (January).
+</div>
+<div id="ref-feat_selec2017" class="csl-entry" role="listitem">
+Li, Jundong, Kewei Cheng, Suhang Wang, Fred Morstatter, Robert P. Trevino, Jiliang Tang, and Huan Liu. 2017. <span>“Feature Selection: A Data Perspective.”</span> <em>ACM Comput. Surv.</em> 50 (6). <a href="https://doi.org/10.1145/3136625">https://doi.org/10.1145/3136625</a>.
+</div>
+<div id="ref-SHAP_values" class="csl-entry" role="listitem">
+Lundberg, Scott M, and Su-In Lee. 2017. <span>“A Unified Approach to Interpreting Model Predictions.”</span> Edited by I. Guyon, U. Von Luxburg, S. Bengio, H. Wallach, R. Fergus, S. Vishwanathan, and R. Garnett 30. <a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf">https://proceedings.neurips.cc/paper_files/paper/2017/file/8a20a8621978632d76c43dfd28b67767-Paper.pdf</a>.
+</div>
+<div id="ref-lyne1979" class="csl-entry" role="listitem">
+Lyne, V et al. 1979. <span>“Institute of Engineers Australia National Conference.”</span> In, 79:89–93. Barton, Australia: Institute of Engineers Australia.
+</div>
+<div id="ref-mann1945nonparametric" class="csl-entry" role="listitem">
+Mann, Henry B. 1945. <span>“Nonparametric Tests Against Trend.”</span> <em>Econometrica: Journal of the Econometric Society</em>, 245–59.
+</div>
+<div id="ref-flood-control2020" class="csl-entry" role="listitem">
+Maricopa County, Flood Control District of. 2020. <span>“<span>Flood Warning Program - Program Review</span>.”</span> Maricopa County Flood Control District; Maricopa County Flood Control District. <a href="https://alert.fcd.maricopa.gov/alert/FWP_report_FINAL.pdf">https://alert.fcd.maricopa.gov/alert/FWP_report_FINAL.pdf</a>.
+</div>
+<div id="ref-ML_interpretability2019" class="csl-entry" role="listitem">
+Murdoch, W. James, Chandan Singh, Karl Kumbier, Reza Abbasi-Asl, and Bin Yu. 2019. <span>“Definitions, Methods, and Applications in Interpretable Machine Learning.”</span> <em>Proceedings of the National Academy of Sciences</em> 116 (44): 22071–80. <a href="https://doi.org/10.1073/pnas.1900654116">https://doi.org/10.1073/pnas.1900654116</a>.
+</div>
+<div id="ref-nathan1990" class="csl-entry" role="listitem">
+Nathan, R. J. et al. 1990. <span>“Evaluation of Automated Techniques for Base Flow and Recession Analyses.”</span> <em>Water Resources Research</em> 26 (7): 1465–73. <a href="https://doi.org/10.1029/WR026i007p01465">https://doi.org/10.1029/WR026i007p01465</a>.
+</div>
+<div id="ref-neff2005" class="csl-entry" role="listitem">
+Neff, B. P. et al. 2005. <span>“Base Flow in the Great Lakes Basin.”</span> Report 2005-5217. Reston, VA: USGS. <a href="https://doi.org/10.3133/sir20055217">https://doi.org/10.3133/sir20055217</a>.
+</div>
+<div id="ref-ni2020streamflow" class="csl-entry" role="listitem">
+Ni, Lingling et al. 2020. <span>“Streamflow Forecasting Using Extreme Gradient Boosting Model Coupled with Gaussian Mixture Model.”</span> <em>Journal of Hydrology</em> 586: 124901.
+</div>
+<div id="ref-odonnell2016" class="csl-entry" role="listitem">
+O’Donnell, Frances C et al. 2016. <span>“12th Biennial Conference of Research on the Colorado Plateau.”</span> In.
+</div>
+<div id="ref-reitz2017" class="csl-entry" role="listitem">
+Reitz, M. et al. 2017. <span>“Annual Estimates of Recharge, Quick<span>-</span>Flow Runoff, and Evapotranspiration for the Contiguous US Using Empirical Regression Equations.”</span> <em>JAWRA Journal of the American Water Resources Association</em> 53 (4): 961–83. <a href="https://doi.org/10.1111/1752-1688.12546">https://doi.org/10.1111/1752-1688.12546</a>.
+</div>
+<div id="ref-Rozos2021Machine" class="csl-entry" role="listitem">
+Rozos, E. et al. 2021. <span>“Machine Learning in Assessing the Performance of Hydrological Models.”</span> <em>Hydrology</em>. <a href="https://doi.org/10.3390/hydrology9010005">https://doi.org/10.3390/hydrology9010005</a>.
+</div>
+<div id="ref-santhi2008" class="csl-entry" role="listitem">
+Santhi, C. et al. 2008. <span>“Regional Estimation of Base Flow for the Conterminous United States by Hydrologic Landscape Regions.”</span> <em>Journal of Hydrology</em> 351 (1-2): 139–53. <a href="https://doi.org/10.1016/j.jhydrol.2007.12.018">https://doi.org/10.1016/j.jhydrol.2007.12.018</a>.
+</div>
+<div id="ref-scanlon2006" class="csl-entry" role="listitem">
+Scanlon, Bridget R. et al. 2006. <span>“Global Synthesis of Groundwater Recharge in Semiarid and Arid Regions.”</span> <em>Hydrological Processes</em> 20 (15): 3335–70. <a href="https://doi.org/10.1002/hyp.6335">https://doi.org/10.1002/hyp.6335</a>.
+</div>
+<div id="ref-schmidt_ML_2020" class="csl-entry" role="listitem">
+Schmidt, Lennart et al. 2020. <span>“Challenges in Applying Machine Learning Models for Hydrological Inference: A Case Study for Flooding Events Across Germany.”</span> <em>Water Resources Research</em> 56 (5): e2019WR025924. https://doi.org/<a href="https://doi.org/10.1029/2019WR025924">https://doi.org/10.1029/2019WR025924</a>.
+</div>
+<div id="ref-sheppard2002" class="csl-entry" role="listitem">
+Sheppard, Pr et al. 2002. <span>“The Climate of the US Southwest.”</span> <em>Climate Research</em> 21: 219–38. <a href="https://doi.org/10.3354/cr021219">https://doi.org/10.3354/cr021219</a>.
+</div>
+<div id="ref-singh2018" class="csl-entry" role="listitem">
+Singh, Shailesh Kumar et al. 2018. <span>“Towards Baseflow Index Characterisation at National Scale in New Zealand.”</span> <em>Journal of Hydrology</em> 568: 646–57. <a href="https://doi.org/10.1016/j.jhydrol.2018.11.025">https://doi.org/10.1016/j.jhydrol.2018.11.025</a>.
+</div>
+<div id="ref-sloto1996" class="csl-entry" role="listitem">
+Sloto, Ronald et al. 1996. <span>“HYSEP: A Computer Program for Streamflow Hydrograph Separation and Analysis.”</span> 96-4040. <span>USGS</span>. <a href="https://doi.org/10.3133/wri964040">https://doi.org/10.3133/wri964040</a>.
+</div>
+<div id="ref-szczepanek2022daily" class="csl-entry" role="listitem">
+Szczepanek, Robert. 2022. <span>“Daily Streamflow Forecasting in Mountainous Catchment Using XGBoost, LightGBM and CatBoost.”</span> <em>Hydrology</em> 9 (12): 226.
+</div>
+<div id="ref-tan2020" class="csl-entry" role="listitem">
+Tan, Xuejin et al. 2020. <span>“Global Changes in Baseflow Under the Impacts of Changing Climate and Vegetation.”</span> <em>Water Resources Research</em> 56 (9): e2020WR027349. <a href="https://doi.org/10.1029/2020WR027349">https://doi.org/10.1029/2020WR027349</a>.
+</div>
+<div id="ref-taylor2013" class="csl-entry" role="listitem">
+Taylor, Richard G. et al. 2013. <span>“Ground Water and Climate Change.”</span> <em>Nature Climate Change</em> 3 (4): 322–29. <a href="https://doi.org/10.1038/nclimate1744">https://doi.org/10.1038/nclimate1744</a>.
+</div>
+<div id="ref-nrcs2009" class="csl-entry" role="listitem">
+USDA. 2009. <em>Part 630 Hydrology National Engineering Handbook, Chapter 7: Hydrologic Soil Groups</em>. USDA Natural Resources Conservation Service.
+</div>
+<div id="ref-usgs2010" class="csl-entry" role="listitem">
+USGS. 2010. <span>“Water Resources Data for the United States Water Year 2007.”</span> <a href="http://wdr.water.usgs.gov/wy2007/search.jsp" class="uri">http://wdr.water.usgs.gov/wy2007/search.jsp</a>.
+</div>
+<div id="ref-usgs-glossary-2018" class="csl-entry" role="listitem">
+USGS. 2018. <span>“Water Science Glossary.”</span> <a href="https://www.usgs.gov/special-topics/water-science-school/science/water-science-glossary">https://www.usgs.gov/special-topics/water-science-school/science/water-science-glossary</a>.
+</div>
+<div id="ref-wolock2003" class="csl-entry" role="listitem">
+Wolock, D. M. 2003. <span>“Estimated Mean Annual Natural Ground-Water Recharge in the Conterminous United States.”</span> <a href="https://doi.org/10.5066/P9FSSVF3" class="uri">https://doi.org/10.5066/P9FSSVF3</a>.
+</div>
+<div id="ref-woodhouse_udall22" class="csl-entry" role="listitem">
+Woodhouse, Connie A. et al. 2022. <span>“Upper <span>Gila</span>, <span>Salt</span>, and <span>Verde Rivers</span>: <span>Arid Land Rivers</span> in a <span>Changing Climate</span>.”</span> <em>Earth Interactions</em> 26 (1): 1–14. <a href="https://doi.org/10.1175/EI-D-21-0014.1">https://doi.org/10.1175/EI-D-21-0014.1</a>.
+</div>
+<div id="ref-yao2018" class="csl-entry" role="listitem">
+Yao, Yingying et al. 2018. <span>“Role of Groundwater in the Dryland Ecohydrological System: A Case Study of the Heihe River Basin.”</span> <em>Journal of Geophysical Research: Atmospheres</em> 123 (13): 6760–76. <a href="https://doi.org/10.1029/2018JD028432">https://doi.org/10.1029/2018JD028432</a>.
+</div>
+<div id="ref-Ying_2019" class="csl-entry" role="listitem">
+Ying, Xue. 2019. <span>“An Overview of Overfitting and Its Solutions.”</span> <em>Journal of Physics: Conference Series</em> 1168 (2): 022022. <a href="https://doi.org/10.1088/1742-6596/1168/2/022022">https://doi.org/10.1088/1742-6596/1168/2/022022</a>.
+</div>
+<div id="ref-zomer2022" class="csl-entry" role="listitem">
+Zomer, Robert J. et al. 2022. <span>“Version 3 of the Global Aridity Index and Potential Evapotranspiration Database.”</span> <em>Scientific Data</em> 9 (1): 409. <a href="https://doi.org/10.1038/s41597-022-01493-1">https://doi.org/10.1038/s41597-022-01493-1</a>.
+</div>
+</div>
+</section>
+     </main>
+<!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script> 
+  
+</body></html>
