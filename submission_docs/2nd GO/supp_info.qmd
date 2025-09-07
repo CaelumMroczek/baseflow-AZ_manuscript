@@ -1,10 +1,11 @@
 ---
 title: "supp_info"
-format: docx
+format: 
+  docx: default
 ---
 
 | Variable | Source | Sub Variables | Unit | Geoprocessing |
-|----------------|------------|----------------------|------------|------------|
+|--------------|--------------|-----------------|--------------|--------------|
 | Precipitation | PRISM |  | mm | Basin average |
 | Temperature | PRISM |  | C | Basin average |
 | Reference Evapotranspiration | MODIS |  | mm | Basin average |
